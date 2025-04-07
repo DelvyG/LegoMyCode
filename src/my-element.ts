@@ -6,6 +6,8 @@ import './blocks/lmc-input';
 import './blocks/lmc-alert';
 import './blocks/lmc-checkbox';
 import './blocks/lmc-textarea';
+import './blocks/lmc-select';
+import type { LmcSelectOption } from './blocks/lmc-select'; // Usa 'import type' para interfaces
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { customElement, property, state } from 'lit/decorators.js';
@@ -65,7 +67,23 @@ export class MyElement extends LitElement {
     }
   
 
-
+    private _selectOptions: LmcSelectOption[] = [
+      { value: 'op1', label: 'Opción Uno' },
+      { value: 'op2', label: 'Opción Dos' },
+      { value: 'op3', label: 'Opción Tres (Deshabilitada)', disabled: true },
+      { value: 100, label: 'Opción Cuatro (Número)' } // Value puede ser número
+    ];
+  
+    // Estado para guardar el valor seleccionado
+    @state() private _selectedValue: string | number = ''; // Inicialmente vacío para mostrar placeholder
+  
+    // ... (métodos existentes) ...
+  
+    // 👇 ¡NUEVO MÉTODO! Para manejar el cambio del select
+    private _handleSelectChange(event: CustomEvent) {
+      console.log('Select cambió:', event.detail);
+      this._selectedValue = event.detail.value;
+    }
 
 
   render() {
@@ -95,6 +113,26 @@ export class MyElement extends LitElement {
 
 
         <hr/>
+
+        <h2>Probando el Select:</h2>
+
+<lmc-select
+  label="Elige una opción:"
+  placeholder="-- Selecciona --"
+  .options=${this._selectOptions} /* Pasa el array de opciones */
+  .value=${this._selectedValue}   /* Enlaza al estado del valor seleccionado */
+  @lmc-change=${this._handleSelectChange} /* Escucha el evento de cambio */
+></lmc-select>
+
+<p>Valor seleccionado: <strong>${this._selectedValue || 'Ninguno'}</strong></p>
+
+<lmc-select
+  label="Select Deshabilitado:"
+  disabled
+  .options=${this._selectOptions}
+  value="op1" /* Ejemplo de valor preseleccionado */
+></lmc-select>
+
 
 
         <lmc-card>
