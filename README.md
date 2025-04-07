@@ -53,6 +53,7 @@ _(Para más detalles, consulta la documentación interna del proyecto)_
 ## Estructura del Proyecto 📁 (Simplificada)
 
 LegoMyCode/
+
 ├── public/         # Archivos estáticos (ej: imágenes)
 ├── src/
 │   ├── blocks/     # ¡Aquí viven los bloques LegoMyCode! (lmc-*.ts)
@@ -64,3 +65,5 @@ LegoMyCode/
 ├── package.json    # Dependencias y scripts del proyecto
 ├── tsconfig.json   # Configuración de TypeScript
 └── README.md       # ¡Este archivo!
+=======
+
