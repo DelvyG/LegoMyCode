@@ -1,5 +1,6 @@
 import './blocks/lmc-text-display'; // Importa para registrar el custom element
-import './blocks/lmc-basic-button'; // ¡NUEVA IMPORTACIÓN!
+import './blocks/lmc-basic-button'; // 
+import './blocks/lmc-simple-image';
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
@@ -62,6 +63,37 @@ export class MyElement extends LitElement {
           disabled
           @lmc-click=${this._handleButtonClick}
         ></lmc-basic-button>
+
+        <h2>Probando la Imagen:</h2>
+
+<lmc-simple-image
+  src="/img/lego1.png"
+  alt="Imagen placeholder 150x150"
+  width="150px"
+  height="150px"
+  caption="Placeholder 1"
+  style="--lmc-image-border-radius: 10px;"
+></lmc-simple-image>
+
+<lmc-simple-image
+  src="/img/lego1.png"
+  alt="Imagen placeholder rectangular"
+  caption="Placeholder 2 - Rectangular con object-fit: contain"
+  style="--lmc-image-object-fit: contain; border: 1px solid grey;" /* Forzar contain */
+  width="300px"
+  height="100px"
+></lmc-simple-image>
+
+<lmc-simple-image
+  src=""
+  alt="Imagen pequeña sin caption ni tamaño explícito"
+></lmc-simple-image>
+
+<lmc-simple-image
+  src="URL_IMAGEN_INEXISTENTE"
+  alt="Esta imagen no se mostrará, pero el alt text es importante"
+></lmc-simple-image>
+
 
       </div>
     `;

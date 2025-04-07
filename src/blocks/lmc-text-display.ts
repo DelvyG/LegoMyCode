@@ -14,14 +14,18 @@ import { customElement, property } from 'lit/decorators.js';
 @customElement('lmc-text-display')
 export class LmcTextDisplay extends LitElement {
 
-  // --- Estilos ---
-  static styles = css`
-    :host {
-      display: inline; /* O 'block' según necesites */
-      color: var(--lmc-text-display-color, inherit);
-      font-size: var(--lmc-text-display-font-size, inherit);
-    }
-  `;
+
+static styles = css`
+  :host {
+    display: inline;
+    /* Usa la variable específica, con fallback a la global, con fallback final al valor por defecto del navegador */
+    color: var(--lmc-text-display-color, var(--lmc-global-color-text, inherit));
+    font-size: var(--lmc-text-display-font-size, inherit); /* Mantenemos inherit como fallback final para font-size */
+    font-family: var(--lmc-text-display-font-family, var(--lmc-global-font-family-base, inherit)); /* Añadido para consistencia */
+  }
+`;
+
+
 
   // --- Propiedades ---
   @property({ type: String })

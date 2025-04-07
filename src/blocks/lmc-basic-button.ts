@@ -21,35 +21,47 @@ export class LmcBasicButton extends LitElement {
 
   // --- Estilos ---
   static styles = css`
-    :host {
-      display: inline-block; /* Para que el botón se comporte como un elemento en línea */
-    }
+  :host {
+    display: inline-block;
+    /* Define el color de fondo base usando el secundario global como fallback */
+    --_lmc-button-background-color: var(--lmc-button-background-color, var(--lmc-global-color-secondary, #eee));
+    /* Define el color de texto base usando el texto global como fallback */
+    --_lmc-button-text-color: var(--lmc-button-text-color, var(--lmc-global-color-text, #333));
+  }
 
-    button {
-      padding: var(--lmc-button-padding, 8px 16px);
-      background-color: var(--lmc-button-background-color, #eee);
-      color: var(--lmc-button-text-color, #333);
-      border: none;
-      border-radius: var(--lmc-button-border-radius, 4px);
-      cursor: pointer;
-      font-family: inherit; /* Hereda la fuente */
-      font-size: inherit;   /* Hereda el tamaño */
-      transition: filter 0.15s ease-out;
-    }
+  button {
+    /* Usan las variables internas definidas en :host */
+    padding: var(--lmc-button-padding, calc(var(--lmc-global-spacing-base, 1rem) * 0.5) var(--lmc-global-spacing-base, 1rem)); /* Usa spacing global para padding por defecto */
+    background-color: var(--_lmc-button-background-color);
+    color: var(--_lmc-button-text-color);
+    border: none;
+    border-radius: var(--lmc-button-border-radius, var(--lmc-global-border-radius-base, 4px)); /* Usa border-radius global por defecto */
+    cursor: pointer;
+    font-family: inherit; /* Hereda del host, que debería heredar del body/global */
+    font-size: inherit;
+    transition: filter 0.15s ease-out;
+  }
 
-    button:hover:not([disabled]) {
-      filter: brightness(90%); /* Efecto hover simple */
-    }
+  button:hover:not([disabled]) {
+    filter: brightness(90%);
+  }
 
-    button:active:not([disabled]) {
-      filter: brightness(80%); /* Efecto al presionar */
-    }
+  button:active:not([disabled]) {
+    filter: brightness(80%);
+  }
 
-    button[disabled] {
-      cursor: not-allowed;
-      opacity: var(--lmc-button-opacity-disabled, 0.5);
-    }
-  `;
+  button[disabled] {
+    cursor: not-allowed;
+    opacity: var(--lmc-button-opacity-disabled, 0.5);
+  }
+
+  /* Podríamos añadir estilos para un botón primario usando la variable global primaria */
+  :host([appearance="primary"]) { /* Si tuvieras una prop appearance='primary' */
+     --_lmc-button-background-color: var(--lmc-button-primary-bg-color, var(--lmc-global-color-primary, blue));
+     --_lmc-button-text-color: var(--lmc-button-primary-text-color, white); /* Asumiendo texto blanco para primario */
+  }
+`;
+
 
   // --- Propiedades ---
   @property({ type: String })
