@@ -65,5 +65,5 @@ LegoMyCode/
 ├── package.json    # Dependencias y scripts del proyecto
 ├── tsconfig.json   # Configuración de TypeScript
 └── README.md       # ¡Este archivo!
-=======
+
 
