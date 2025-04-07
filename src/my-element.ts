@@ -5,6 +5,7 @@ import './blocks/lmc-card';
 import './blocks/lmc-input';
 import './blocks/lmc-alert';
 import './blocks/lmc-checkbox';
+import './blocks/lmc-textarea';
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { customElement, property, state } from 'lit/decorators.js';
@@ -54,6 +55,15 @@ export class MyElement extends LitElement {
       }
     }
 
+
+    @state() private _textareaValue: string = 'Texto inicial\ncon varias líneas.';
+
+    private _handleTextareaChange(event: CustomEvent) {
+      if (event.detail && typeof event.detail.value !== 'undefined') {
+        this._textareaValue = event.detail.value;
+      }
+    }
+  
 
 
 
@@ -144,6 +154,29 @@ export class MyElement extends LitElement {
           type="password"
           placeholder="Contraseña secreta"
         ></lmc-input>
+
+
+        <h2>Probando el Textarea:</h2>
+
+<lmc-textarea
+  label="Descripción Detallada:"
+  placeholder="Escribe un texto largo aquí..."
+  rows="5"
+  .value=${this._textareaValue}
+  @lmc-input=${this._handleTextareaChange}
+></lmc-textarea>
+
+<p>Valor actual del textarea:</p>
+<pre style="white-space: pre-wrap; border: 1px dashed #ccc; padding: 0.5em;">${this._textareaValue}</pre>
+
+<lmc-textarea
+  label="No redimensionable:"
+  value="Este no se puede cambiar de tamaño."
+  resize="none"
+  readonly
+></lmc-textarea>
+
+
 
 
         <h2>Probando el Checkbox:</h2>
