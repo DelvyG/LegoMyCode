@@ -54,6 +54,7 @@ _(Para más detalles, consulta la documentación interna del proyecto)_
 
 LegoMyCode/
 
+```text
 ├── public/         # Archivos estáticos (ej: imágenes)
 ├── src/
 │   ├── blocks/     # ¡Aquí viven los bloques LegoMyCode! (lmc-*.ts)
@@ -66,4 +67,5 @@ LegoMyCode/
 ├── tsconfig.json   # Configuración de TypeScript
 └── README.md       # ¡Este archivo!
 
+```
 
