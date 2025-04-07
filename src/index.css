@@ -1,94 +1,166 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* ==========================================================================
+   LegoMyCode Global Styles (src/index.css)
+   ========================================================================== */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/**
+ * :root
+ * --------------------------------------------------------------------------
+ * Define las variables CSS globales para todo el proyecto LegoMyCode.
+ * Estas variables controlan la paleta de colores base, tipografía, espaciados, etc.
+ * Por defecto, definen el tema CLARO.
+ * También se incluyen algunas configuraciones globales de renderizado de fuentes.
+ */
+ :root {
+  /* === Paleta de Colores Base (Tema Claro por defecto) === */
+  --lmc-global-color-primary: #007bff;      /* Azul primario para énfasis, botones, links */
+  --lmc-global-color-secondary: #6c757d;   /* Gris secundario para elementos menos importantes */
+  --lmc-global-color-background: #ffffff; /* Fondo principal de la página */
+  --lmc-global-color-text: #212529;        /* Color de texto principal oscuro */
+  --lmc-global-color-muted: #6c757d;      /* Color para texto secundario o atenuado */
+  --lmc-global-color-border: #dee2e6;      /* Color estándar para bordes y separadores */
+  /* Puedes añadir más colores según necesites (success, danger, warning, info, etc.) */
+  /* --lmc-global-color-success: #198754; */
 
+  /* === Tipografía Base === */
+  --lmc-global-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; /* Fuente moderna sans-serif */
+  --lmc-global-font-size-base: 16px;       /* Tamaño de fuente raíz (1rem) */
+  --lmc-global-line-height-base: 1.5;      /* Interlineado base para legibilidad */
+  --lmc-global-font-weight-base: 400;      /* Peso normal */
+  --lmc-global-font-weight-bold: 700;      /* Peso bold */
+
+  /* === Espaciados y Radios === */
+  --lmc-global-border-radius-base: 0.375rem; /* ~6px - Radio de borde estándar */
+  --lmc-global-spacing-base: 1rem;         /* ~16px - Unidad de espaciado base */
+
+  /* === Configuraciones Globales de Renderizado === */
+  /* Controla cómo el navegador renderiza claro/oscuro elementos nativos (inputs, scrollbars) */
+  color-scheme: light dark; /* Indica que soportamos ambos modos */
+
+  /* Mejoras en el renderizado de fuentes */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/**
+ * body
+ * --------------------------------------------------------------------------
+ * Estilos base aplicados directamente al <body>.
+ * Establece la fuente, tamaño, color y fondo por defecto usando las variables globales.
+ * Elimina el margen por defecto del navegador.
+ * NOTA: Se eliminaron los estilos `display:flex; place-items:center; min-width`
+ *       de la plantilla Vite, ya que son más para centrar un logo/demo
+ *       que para un layout de página real. `min-height: 100vh` se puede
+ *       añadir si se busca un footer pegajoso, por ejemplo.
+ */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-}
-
-
-/* src/index.css */
-
-:root {
-  /* Paleta de Colores Base (Tema Claro por defecto) */
-  --lmc-global-color-primary: #007bff; /* Un azul primario */
-  --lmc-global-color-secondary: #6c757d; /* Un gris secundario */
-  --lmc-global-color-background: #ffffff; /* Fondo blanco */
-  --lmc-global-color-text: #212529;      /* Texto oscuro principal */
-  --lmc-global-color-muted: #6c757d;    /* Texto atenuado o bordes */
-  --lmc-global-color-border: #dee2e6;    /* Color de borde estándar */
-
-  /* Tipografía Base */
-  --lmc-global-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --lmc-global-font-size-base: 16px;
-  --lmc-global-line-height-base: 1.5;
-
-  /* Otros Globales */
-  --lmc-global-border-radius-base: 0.375rem; /* ~6px */
-  --lmc-global-spacing-base: 1rem; /* ~16px */
-}
-
-/* Estilos globales básicos para la página */
-body {
-  margin: 0; /* Quita márgenes por defecto */
+  margin: 0; /* Reset de margen */
   font-family: var(--lmc-global-font-family-base);
   font-size: var(--lmc-global-font-size-base);
   line-height: var(--lmc-global-line-height-base);
+  font-weight: var(--lmc-global-font-weight-base);
   color: var(--lmc-global-color-text);
   background-color: var(--lmc-global-color-background);
+  /* min-height: 100vh; */ /* Descomentar si necesitas que el body ocupe al menos toda la altura */
 }
 
-/* Puedes añadir otros estilos globales aquí si lo necesitas */
-h1, h2 {
-   /* Estilos para cabeceras si quieres */
+/**
+ * Estilos Base para Elementos HTML Comunes
+ * --------------------------------------------------------------------------
+ * Proporciona estilos consistentes para elementos HTML básicos usando
+ * las variables globales. Ayuda a que el contenido dentro y fuera de los
+ * bloques LegoMyCode tenga una apariencia inicial coherente.
+ */
+
+/* Cabeceras (h1-h6) */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: calc(var(--lmc-global-spacing-base) * 0.5);
+  font-weight: var(--lmc-global-font-weight-bold); /* Usa el peso bold definido */
+  line-height: 1.2; /* Interlineado más ajustado para títulos */
+}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+/* Párrafos */
+p {
+  margin-top: 0;
+  margin-bottom: var(--lmc-global-spacing-base);
 }
 
-
-
-/* Estilos para el tema oscuro */
-[data-theme="dark"] { /* Selecciona cuando el body o html tiene data-theme="dark" */
-  --lmc-global-color-primary: #0d6efd; /* Un azul diferente para oscuro */
-  --lmc-global-color-secondary: #495057;
-  --lmc-global-color-background: #212529; /* Fondo oscuro */
-  --lmc-global-color-text: #f8f9fa;      /* Texto claro */
-  --lmc-global-color-muted: #adb5bd;
-  --lmc-global-color-border: #495057;
+/* Listas */
+ul, ol {
+  margin-top: 0;
+  margin-bottom: var(--lmc-global-spacing-base);
+  padding-left: calc(var(--lmc-global-spacing-base) * 1.5);
+}
+li {
+  margin-bottom: calc(var(--lmc-global-spacing-base) * 0.25);
 }
 
-/* Puedes añadir estilos específicos para botones en modo oscuro si es necesario */
-[data-theme="dark"] lmc-basic-button {
-   /* Ejemplo: Quizás quieres invertir el color por defecto del botón */
-   /* --lmc-button-background-color: #343a40; */
-   /* --lmc-button-text-color: #f8f9fa; */
+/* Líneas Horizontales */
+hr {
+  margin-top: var(--lmc-global-spacing-base);
+  margin-bottom: var(--lmc-global-spacing-base);
+  border: 0;
+  border-top: 1px solid var(--lmc-global-color-border);
+  opacity: 0.75;
 }
+
+/* Enlaces */
+a {
+  color: var(--lmc-global-color-primary); /* Usa el color primario global */
+  text-decoration: none; /* Quita subrayado por defecto */
+  transition: opacity 0.15s ease-in-out;
+}
+a:hover {
+  /* color: color-mix(in srgb, var(--lmc-global-color-primary), #000 10%); */ /* Ejemplo para oscurecer ligeramente */
+  opacity: 0.8;
+  text-decoration: underline; /* Subraya en hover */
+}
+
+/* Imágenes (Estilo base si no se usa lmc-simple-image) */
+img {
+  max-width: 100%;
+  height: auto; /* Mantiene proporción por defecto */
+  vertical-align: middle;
+}
+
+/**
+ * Tema Oscuro (Activado con data-theme="dark" en <html> o <body>)
+ * --------------------------------------------------------------------------
+ * Sobreescribe las variables globales para adaptar la apariencia al modo oscuro.
+ * Los componentes que usan estas variables se adaptarán automáticamente.
+ */
+[data-theme="dark"] {
+  /* === Sobrescritura de Paleta de Colores para Tema Oscuro === */
+  --lmc-global-color-primary: #58a6ff;       /* Azul más brillante para contraste en oscuro */
+  --lmc-global-color-secondary: #8b949e;
+  --lmc-global-color-background: #0d1117;   /* Fondo oscuro (ej: GitHub dark) */
+  --lmc-global-color-text: #c9d1d9;          /* Texto claro principal */
+  --lmc-global-color-muted: #8b949e;
+  --lmc-global-color-border: #30363d;        /* Borde más oscuro */
+  /* --lmc-global-color-success: #3fb950; */
+
+  /* No es necesario redefinir tipografía, espaciados, etc. a menos que el diseño lo requiera */
+}
+
+/* === (Opcional) Sobrescrituras Específicas para Modo Oscuro === */
+/* Si algún componente necesita ajustes finos ADEMÁS de las variables */
+
+/* Ejemplo: Hacer que los HR sean un poco más visibles en oscuro */
+/* [data-theme="dark"] hr {
+  opacity: 0.5;
+} */
+
+/* Ejemplo: Ajustar botón por defecto en oscuro (si los fallbacks no son suficientes) */
+/* [data-theme="dark"] lmc-basic-button {
+   --lmc-button-background-color: #21262d;
+   --lmc-button-text-color: #c9d1d9;
+   --lmc-button-border-color: #30363d; /* Si tuviera borde
+} */
