@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LegoMyCode</title> <!-- Puedes cambiar el título -->
+    <link rel="stylesheet" href="./src/index.css" />
+    <!-- ESTA LÍNEA ES CLAVE: Carga el script que DEFINE <my-element> -->
+    <script type="module" src="/src/my-element.ts"></script>
+  </head>
+  <body>
+    <!-- ESTA LÍNEA ES CLAVE: Le dice al navegador DÓNDE poner tu componente principal -->
+    <my-element>
+      <!-- CONTENIDO OPCIONAL: Esto es 'Light DOM'.
+           Se muestra antes de que Lit cargue o si JS falla.
+           Lit lo reemplazará a menos que uses <slot> en my-element.ts.
+           Puedes BORRAR el <h1> de aquí si no lo necesitas como placeholder. -->
+      <!-- <h1>Vite + Lit</h1> --> 
+    </my-element>
+
+    
+  </body>
+</html>
