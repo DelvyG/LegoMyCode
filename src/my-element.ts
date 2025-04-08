@@ -19,10 +19,11 @@ import './blocks/lmc-navbar';
 import './blocks/lmc-footer';
 import './blocks/lmc-grid';
 import './blocks/lmc-modal';
+import './blocks/lmc-icon';
 
 // Lit y Decoradores
 import { LitElement, css, html } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 // =======================================================================
 // DEFINICIÓN DEL COMPONENTE PRINCIPAL: MyElement
@@ -250,6 +251,35 @@ export class MyElement extends LitElement {
                 <lmc-alert type="danger" message="Error: no se pudo procesar la solicitud."></lmc-alert>
             </lmc-container>
 
+            ${/* --- Sección lmc-icon --- */''}
+            <h2>lmc-icon</h2>
+          <p>
+            Icono Home: <lmc-icon name="home"></lmc-icon> 
+            Settings: <lmc-icon name="settings" style="--lmc-icon-color: var(--lmc-global-color-primary);" label="Configuración"></lmc-icon> |
+            Delete (tamaño grande): <lmc-icon name="delete" size="36px" style="--lmc-icon-color: red;"></lmc-icon> |
+            Filled Star: <lmc-icon name="star" style="--lmc-icon-font-variation-settings: 'FILL' 1; --lmc-icon-color: gold;"></lmc-icon>
+          </p>
+          <p>
+            Botón con icono:
+            <lmc-basic-button>
+              <lmc-icon name="download" slot="prefix" size="1.2em"></lmc-icon> Descargar
+            </lmc-basic-button>
+             <lmc-basic-button appearance="primary">
+               Guardar <lmc-icon name="save" slot="suffix" size="1.2em"></lmc-icon>
+            </lmc-basic-button>
+             <lmc-basic-button disabled>
+               <lmc-icon name="cloud_off" slot="prefix" size="1.2em"></lmc-icon> Offline
+            </lmc-basic-button>
+          </p>
+          <p>
+            Enlace con icono:
+            <lmc-nav-link href="#perfil">
+              <lmc-icon name="account_circle" size="1.2em" style="margin-right: 0.3em;"></lmc-icon> Mi Perfil
+            </lmc-nav-link>
+          </p>
+
+
+
             ${// --- Sección Controles de Formulario Individuales ---
               ''}
             <lmc-container padding="1rem" class="demo-section">
@@ -380,12 +410,8 @@ export class MyElement extends LitElement {
     :host {
       display: block;
     }
-    .main-demo-wrapper {
-      /* Estilos generales si son necesarios */
-    }
-    .main-content-area {
-      /* Estilos para el área entre navbar y footer */
-    }
+    /* Removed empty ruleset .main-demo-wrapper */
+    /* Removed empty ruleset .main-content-area */
     .demo-section {
         border: 1px solid #eee;
         border-radius: 8px;

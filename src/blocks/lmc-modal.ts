@@ -2,7 +2,7 @@
 
 import { LitElement, html, css, nothing } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
-import { createFocusTrap, FocusTrap } from 'focus-trap'; // Asegúrate de instalar 'focus-trap'
+import { createFocusTrap } from 'focus-trap'; // Asegúrate de instalar 'focus-trap'
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 /**
