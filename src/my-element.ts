@@ -11,7 +11,6 @@ import './blocks/lmc-alert';
 import './blocks/lmc-checkbox';
 import './blocks/lmc-textarea';
 import './blocks/lmc-select';
-import type { LmcSelectOption } from './blocks/lmc-select';
 import './blocks/lmc-form';
 import './blocks/lmc-container';
 import './blocks/lmc-nav-link';
@@ -23,10 +22,12 @@ import './blocks/lmc-icon';
 import './blocks/lmc-tab-group'; 
 import './blocks/lmc-tab';      
 import './blocks/lmc-tab-panel';
+import './blocks/lmc-spinner';
 
 // Lit y Decoradores
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import type { LmcSelectOption } from './blocks/lmc-select';
 
 // =======================================================================
 // DEFINICIÓN DEL COMPONENTE PRINCIPAL: MyElement
@@ -396,6 +397,31 @@ ${/* --- Sección lmc-tab-group --- */''}
         </lmc-container>
 
     </lmc-container>
+
+
+
+    ${/* --- Sección lmc-spinner --- */''}
+        <lmc-container padding="1rem" class="demo-section">
+          <h2>lmc-spinner</h2>
+          <p>Indicador de carga:</p>
+          <div>
+            Spinner tamaño default (2em): <lmc-spinner label="Cargando datos..."></lmc-spinner>
+          </div>
+          <div style="margin-top: 1rem;">
+            Spinner pequeño (1em) color secundario:
+            <lmc-spinner size="1em" style="--lmc-spinner-color: grey; --lmc-spinner-border-width: 2px;"></lmc-spinner>
+          </div>
+          <div style="margin-top: 1rem;">
+            Spinner grande (48px) más lento:
+            <lmc-spinner size="48px" style="--lmc-spinner-border-width: 4px; --lmc-spinner-speed: 1.5s;"></lmc-spinner>
+          </div>
+          <div style="margin-top: 1rem;">
+             <lmc-basic-button>
+                <lmc-spinner size="1em" style="margin-right: 0.5em; --lmc-spinner-color: white; --lmc-spinner-track-color: rgba(255,255,255,0.3); --lmc-spinner-border-width: 2px;" slot="prefix"></lmc-spinner>
+                Cargando...
+             </lmc-basic-button>
+          </div>
+        </lmc-container>
 
 
 
