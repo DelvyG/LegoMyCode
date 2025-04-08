@@ -67,6 +67,13 @@ export class MyElement extends LitElement {
   // =======================================================================
   // MANEJADORES DE EVENTOS Y MÉTODOS
   // =======================================================================
+
+  private _toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    console.log(`MyElement: Tema cambiado a ${newTheme}`);
+  }
   private _openModal() {
     console.log('MyElement: Abriendo modal...');
     this._isModalOpen = true;
@@ -158,9 +165,23 @@ export class MyElement extends LitElement {
   // =======================================================================
   render() {
     const imageUrl = '/img/lego1.png';
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const themeIcon = currentTheme === 'dark' ? 'light_mode' : 'dark_mode';
 
     return html`
       <lmc-container class="main-demo-wrapper" maxWidth="1000px" center-content padding="0">
+
+      <!-- --- Botón Flotante para Cambiar Tema --- -->
+        <lmc-basic-button
+           class="theme-toggle-button"
+           label=${currentTheme === 'dark' ? 'Tema Claro' : 'Tema Oscuro'}
+           title="Alternar tema claro/oscuro"
+           appearance="secondary"
+           @lmc-click=${this._toggleTheme}
+        >
+           <lmc-icon name=${themeIcon} slot="prefix"></lmc-icon>
+        </lmc-basic-button>
+
 
         <lmc-navbar style="--lmc-navbar-background-color: #f8f9fa; --lmc-navbar-border-bottom: 1px solid #dee2e6;">
           <div slot="brand">
@@ -183,6 +204,35 @@ export class MyElement extends LitElement {
             <h1>Hola desde LegoMyCode!</h1>
             <p>Demostración de los bloques disponibles:</p>
             <hr>
+
+
+
+            <!-- --- Sección lmc-basic-button (CON NUEVOS EJEMPLOS) --- -->
+            <lmc-container padding="1rem" class="demo-section">
+              <h2>lmc-basic-button</h2>
+              <div class="button-group">
+                  <lmc-basic-button label="Default (Secondary)"></lmc-basic-button>
+                  <lmc-basic-button label="Primary" appearance="primary"></lmc-basic-button>
+                  <lmc-basic-button label="Success" appearance="success">
+                      <lmc-icon name="check_circle" slot="prefix"></lmc-icon>
+                  </lmc-basic-button>
+                  <lmc-basic-button label="Danger" appearance="danger"></lmc-basic-button>
+                  <lmc-basic-button label="Warning" appearance="warning"></lmc-basic-button>
+                  <lmc-basic-button label="Info" appearance="info"></lmc-basic-button>
+                  <lmc-basic-button label="Light" appearance="light"></lmc-basic-button>
+                  <lmc-basic-button label="Dark" appearance="dark"></lmc-basic-button>
+                  <lmc-basic-button label="Link" appearance="link" @lmc-click=${this._handleButtonClick}></lmc-basic-button>
+                  <lmc-basic-button label="Deshabilitado" disabled>
+                     <lmc-icon name="block" slot="prefix"></lmc-icon>
+                  </lmc-basic-button>
+              </div>
+            </lmc-container>
+
+
+
+
+
+
 
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-modal</h2>

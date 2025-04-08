@@ -146,9 +146,7 @@ export class LmcBasicButton extends LitElement {
     }
 
     /* Estilos para contenido sloteado (iconos, etc.) */
-    .label {
-       /* Si necesitas estilos específicos para el texto */
-    }
+    /* Removed empty .label ruleset to fix the error */
     ::slotted(lmc-icon) {
        /* Ajusta el tamaño o margen del icono si es necesario */
        font-size: 1.2em; /* Ejemplo */
