@@ -18,6 +18,7 @@ import './blocks/lmc-nav-link';
 import './blocks/lmc-navbar';
 import './blocks/lmc-footer';
 import './blocks/lmc-grid';
+import './blocks/lmc-modal';
 
 // Lit y Decoradores
 import { LitElement, css, html } from 'lit';
@@ -32,6 +33,7 @@ export class MyElement extends LitElement {
   // =======================================================================
   // ESTADO INTERNO Y DATOS
   // =======================================================================
+  @state() private _isModalOpen: boolean = false;
   @state() private _inputValue: string = 'Texto inicial input';
   @state() private _textareaValue: string = 'Texto inicial textarea\ncon varias líneas.';
   @state() private _isChecked1: boolean = false;
@@ -48,24 +50,35 @@ export class MyElement extends LitElement {
   // =======================================================================
   // MANEJADORES DE EVENTOS
   // =======================================================================
+  private _openModal() {
+    console.log('Abriendo modal...');
+    this._isModalOpen = true;
+  }
+
+  private _closeModal() {
+    console.log('Cerrando modal...');
+    this._isModalOpen = false;
+  }
+
   private _handleButtonClick() {
     console.log('Botón genérico clickeado!');
     alert('¡Botón genérico pulsado!');
   }
+
   private _handleInputChange(event: CustomEvent) {
-     // Asegurarse que event.detail y event.detail.value existen
      if (event.detail && typeof event.detail.value === 'string') {
        this._inputValue = event.detail.value;
      }
   }
+
   private _handleTextareaChange(event: CustomEvent) {
     if (event.detail && typeof event.detail.value === 'string') {
       this._textareaValue = event.detail.value;
     }
   }
+
   private _handleCheckboxChange(event: CustomEvent, checkboxId: string) {
     console.log(`Checkbox ${checkboxId} cambió:`, event.detail);
-    // Asegurarse que event.detail y event.detail.checked existen
     if (event.detail && typeof event.detail.checked === 'boolean') {
         if (checkboxId === 'cb1') {
           this._isChecked1 = event.detail.checked;
@@ -74,35 +87,36 @@ export class MyElement extends LitElement {
         }
     }
   }
+
   private _handleSelectChange(event: CustomEvent) {
     console.log('Select cambió:', event.detail);
-    if (event.detail && typeof event.detail.value !== 'undefined') { // Puede ser string o number
+    if (event.detail && typeof event.detail.value !== 'undefined') {
       this._selectedValue = event.detail.value;
     }
   }
+
   private _handleFormSubmit() {
     console.log('Manejador _handleFormSubmit ejecutado.');
     const formData = {
       input: this._inputValue,
       textarea: this._textareaValue,
-      checkbox1: this._isChecked1,
-      // select: this._selectedValue // El select no está en el form, lo quitamos de aquí
+      checkbox1: this._isChecked1
     };
     console.log('Datos del formulario:', formData);
     alert(`Formulario enviado con:\nInput: ${formData.input}\nTextarea: ${formData.textarea}\nCheckbox Confirmar: ${formData.checkbox1}`);
   }
 
   // =======================================================================
-  // MÉTODO RENDER (CORREGIDO Y REORGANIZADO)
+  // MÉTODO RENDER (CON COMENTARIOS JS FUERA DEL HTML)
   // =======================================================================
   render() {
     const imageUrl = '/img/lego1.png';
 
-    // Contenedor principal para centrar y limitar ancho
     return html`
       <lmc-container class="main-demo-wrapper" maxWidth="1000px" center-content padding="0">
 
-        <!-- ================== Barra de Navegación ================== -->
+        ${// --- Barra de Navegación ---
+          ''}
         <lmc-navbar style="--lmc-navbar-background-color: #f8f9fa; --lmc-navbar-border-bottom: 1px solid #dee2e6;">
           <div slot="brand">
              <lmc-nav-link href="#" style="--lmc-nav-link-padding: 0.5rem 0;">
@@ -118,16 +132,29 @@ export class MyElement extends LitElement {
             <lmc-basic-button label="Login" @lmc-click=${() => alert('Click en Login!')}></lmc-basic-button>
           </div>
         </lmc-navbar>
-        <!-- ================== Fin Barra de Navegación ================== -->
 
-        <!-- Contenedor para el contenido principal con padding -->
+        ${// --- Contenedor Principal del Contenido ---
+          ''}
         <lmc-container padding="1.5rem" class="main-content-area">
 
             <h1>Hola desde LegoMyCode!</h1>
             <p>Demostración de los bloques disponibles:</p>
             <hr>
 
-             <!-- --- Sección lmc-text-display --- -->
+            ${// --- Sección lmc-modal Button ---
+              ''}
+            <lmc-container padding="1rem" class="demo-section">
+              <h2>lmc-modal</h2>
+              <p>Ventana de diálogo flotante.</p>
+              <lmc-basic-button
+                label="Abrir Modal"
+                @lmc-click=${this._openModal}
+                appearance="primary"
+              ></lmc-basic-button>
+            </lmc-container>
+
+            ${// --- Sección lmc-text-display ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-text-display</h2>
               <lmc-text-display text="Texto básico."></lmc-text-display>
@@ -138,7 +165,8 @@ export class MyElement extends LitElement {
               ></lmc-text-display>
             </lmc-container>
 
-            <!-- --- Sección lmc-simple-image --- -->
+            ${// --- Sección lmc-simple-image ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-simple-image</h2>
               <div class="image-gallery">
@@ -148,7 +176,8 @@ export class MyElement extends LitElement {
               </div>
             </lmc-container>
 
-            <!-- --- Sección lmc-basic-button --- -->
+            ${// --- Sección lmc-basic-button ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-basic-button</h2>
               <lmc-basic-button label="Botón Normal" @lmc-click=${this._handleButtonClick}></lmc-basic-button>
@@ -156,7 +185,8 @@ export class MyElement extends LitElement {
               <lmc-basic-button label="Botón tipo Submit (para forms)" type="submit"></lmc-basic-button>
             </lmc-container>
 
-             <!-- --- Sección lmc-nav-link --- -->
+             ${// --- Sección lmc-nav-link ---
+               ''}
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-nav-link</h2>
               <p>Enlaces de navegación individuales:</p>
@@ -171,17 +201,20 @@ export class MyElement extends LitElement {
               </nav>
             </lmc-container>
 
-           <!-- --- Sección lmc-card (usando lmc-grid) --- -->
+            ${// --- Sección lmc-card (usando lmc-grid) ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
               <h2>lmc-card (organizadas con lmc-grid)</h2>
               <lmc-grid style="--lmc-grid-min-item-width: 300px; --lmc-grid-gap: 1.5rem;">
-                <!-- Tarjeta 1 -->
+                ${// Tarjeta 1
+                  ''}
                 <lmc-card class="demo-card">
                   <lmc-simple-image src="${imageUrl}" alt="Lego 1 en tarjeta" width="100%"></lmc-simple-image>
                   <lmc-text-display text="Contenido en slot por defecto." style="display: block; padding: 1rem 0;"></lmc-text-display>
                   <lmc-basic-button label="Acción Tarjeta 1" @lmc-click=${this._handleButtonClick}></lmc-basic-button>
                 </lmc-card>
-                <!-- Tarjeta 2 -->
+                ${// Tarjeta 2
+                  ''}
                 <lmc-card class="demo-card">
                   <lmc-text-display slot="header" text="Tarjeta con Slots Nombrados"></lmc-text-display>
                   <p>Contenido principal (slot por defecto).</p>
@@ -191,13 +224,15 @@ export class MyElement extends LitElement {
                     <lmc-basic-button label="Aceptar" @lmc-click=${this._handleButtonClick}></lmc-basic-button>
                   </div>
                 </lmc-card>
-                <!-- Tarjeta 3 -->
+                ${// Tarjeta 3
+                  ''}
                 <lmc-card class="demo-card">
                   <lmc-text-display slot="header" text="Otra Tarjeta"></lmc-text-display>
                   <p>Más contenido para llenar la cuadrícula y probar el responsive.</p>
                    <lmc-basic-button label="Ver Más" appearance="primary"></lmc-basic-button>
                 </lmc-card>
-                 <!-- Tarjeta 4 -->
+                 ${// Tarjeta 4
+                   ''}
                  <lmc-card class="demo-card">
                   <lmc-text-display slot="header" text="Última Tarjeta Ejemplo"></lmc-text-display>
                   <p>Elemento final en la cuadrícula.</p>
@@ -205,7 +240,8 @@ export class MyElement extends LitElement {
               </lmc-grid>
             </lmc-container>
 
-            <!-- --- Sección lmc-alert --- -->
+            ${// --- Sección lmc-alert ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
                 <h2>lmc-alert</h2>
                 <lmc-alert type="info" message="Esta es una alerta informativa."></lmc-alert>
@@ -214,10 +250,12 @@ export class MyElement extends LitElement {
                 <lmc-alert type="danger" message="Error: no se pudo procesar la solicitud."></lmc-alert>
             </lmc-container>
 
-           <!-- --- Sección Controles de Formulario Individuales --- -->
+            ${// --- Sección Controles de Formulario Individuales ---
+              ''}
             <lmc-container padding="1rem" class="demo-section">
                 <h2>Controles de Formulario</h2>
-                <!-- lmc-input -->
+                ${// lmc-input
+                  ''}
                 <div>
                     <h3>lmc-input</h3>
                     <lmc-input label="Input Normal:" placeholder="Escribe aquí..." .value=${this._inputValue} @lmc-input=${this._handleInputChange}></lmc-input>
@@ -225,7 +263,8 @@ export class MyElement extends LitElement {
                     <lmc-input label="Input Deshabilitado:" value="No editable" disabled></lmc-input>
                     <lmc-input label="Input de Contraseña:" type="password" placeholder="Contraseña"></lmc-input>
                 </div>
-                <!-- lmc-textarea -->
+                ${// lmc-textarea
+                  ''}
                 <div class="form-field-spacing">
                     <h3>lmc-textarea</h3>
                     <lmc-textarea label="Textarea Normal:" .value=${this._textareaValue} @lmc-input=${this._handleTextareaChange}></lmc-textarea>
@@ -233,7 +272,8 @@ export class MyElement extends LitElement {
                     <pre class="code-display">${this._textareaValue}</pre>
                     <lmc-textarea label="No redimensionable:" value="Fijo" resize="none" readonly></lmc-textarea>
                 </div>
-                <!-- lmc-checkbox -->
+                 ${// lmc-checkbox
+                   ''}
                 <div class="form-field-spacing">
                   <h3>lmc-checkbox</h3>
                   <lmc-checkbox label="Checkbox 1 (controlado)" .checked=${this._isChecked1} @lmc-change=${(e: CustomEvent) => this._handleCheckboxChange(e, 'cb1')}></lmc-checkbox>
@@ -242,7 +282,8 @@ export class MyElement extends LitElement {
                   <p>Estado Checkbox 2: ${this._isChecked2}</p>
                   <lmc-checkbox label="Checkbox Deshabilitado" disabled checked></lmc-checkbox>
                  </div>
-                 <!-- lmc-select -->
+                 ${// lmc-select
+                   ''}
                  <div class="form-field-spacing">
                     <h3>lmc-select</h3>
                     <lmc-select
@@ -257,7 +298,8 @@ export class MyElement extends LitElement {
                  </div>
             </lmc-container>
 
-            <!-- Sección lmc-form (Usando los controles anteriores) --- -->
+            ${// --- Sección lmc-form ---
+              ''}
             <lmc-container padding="1rem" class="demo-section" style="--lmc-container-background-color: #fafafa;">
               <h2>lmc-form</h2>
               <p>Este formulario usa los controles definidos arriba y se envia con el botón 'type="submit"'.</p>
@@ -278,9 +320,11 @@ export class MyElement extends LitElement {
               </lmc-form>
             </lmc-container>
 
-        </lmc-container> <!-- Fin del contenedor del contenido principal -->
+        </lmc-container> ${// --- Fin del Contenedor Principal del Contenido ---
+                          ''}
 
-        <!-- ================== Pie de Página ================== -->
+        ${// --- Pie de Página ---
+          ''}
         <lmc-footer>
            <lmc-text-display style="font-size: 0.9em;">
              © ${new Date().getFullYear()} LegoMyCode Project. Todos los derechos reservados.
@@ -291,9 +335,41 @@ export class MyElement extends LitElement {
              <lmc-nav-link href="#terminos" style="font-size: 0.8em; --lmc-nav-link-padding: 0.2rem 0.5rem;">Términos de Servicio</lmc-nav-link>
            </div>
         </lmc-footer>
-        <!-- ================== Fin Pie de Página ================== -->
 
-      </lmc-container> <!-- Fin del contenedor general main-demo-wrapper -->
+        ${// --- Definición del Modal (fuera del flujo principal) ---
+          ''}
+        <lmc-modal
+          .open=${this._isModalOpen}
+          label="Título del Modal Accesible"
+          @lmc-close=${this._closeModal}
+        >
+            ${// Contenido del modal usando slots
+              ''}
+            <lmc-text-display slot="header">Título Visible del Modal</lmc-text-display>
+
+            ${// Slot por defecto (body)
+              ''}
+            <p>Este es el contenido principal del diálogo modal.</p>
+            <p>Puedes poner cualquier bloque aquí dentro.</p>
+            <lmc-input label="Campo dentro del modal:" placeholder="..."></lmc-input>
+
+            ${// Slot del footer
+              ''}
+            <div slot="footer">
+                <lmc-basic-button
+                    label="Cerrar"
+                    @lmc-click=${this._closeModal}
+                ></lmc-basic-button>
+                <lmc-basic-button
+                    label="Aceptar Acción"
+                    appearance="primary"
+                    @lmc-click=${() => { alert('Acción Aceptada!'); this._closeModal(); }}
+                ></lmc-basic-button>
+            </div>
+        </lmc-modal>
+
+      </lmc-container> ${// --- Fin del Contenedor General ---
+                          ''}
     `;
   }
 
@@ -314,6 +390,7 @@ export class MyElement extends LitElement {
         border: 1px solid #eee;
         border-radius: 8px;
         margin-top: 2rem;
+        padding: 1.5rem; /* Padding directo para consistencia */
     }
     .demo-section h2 {
       margin-top: 0;
@@ -349,7 +426,7 @@ export class MyElement extends LitElement {
         align-items: flex-start;
     }
     .demo-card {
-        margin-top: 0 !important;
+        margin-top: 0 !important; /* Anula margen si está dentro de un grid con gap */
     }
      .card-footer-actions {
         display: flex;
