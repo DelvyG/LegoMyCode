@@ -14,6 +14,7 @@ import type { LmcSelectOption } from './blocks/lmc-select';
 import './blocks/lmc-form';
 import './blocks/lmc-container'; // Asegúrate que está importado
 import './blocks/lmc-nav-link';
+import './blocks/lmc-navbar';
 
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -92,6 +93,36 @@ export class MyElement extends LitElement {
     // Usamos un contenedor principal para toda la página de demo
     return html`
       <lmc-container class="main-demo-wrapper" maxWidth="1000px" center-content padding="1.5rem">
+
+
+ <!-- ================== Barra de Navegación ================== -->
+ <lmc-navbar style="--lmc-navbar-background-color: #f8f9fa; --lmc-navbar-border-bottom: 1px solid #dee2e6;">
+
+<!-- Slot para la Marca/Logo -->
+<div slot="brand">
+   <lmc-nav-link href="#" style="--lmc-nav-link-padding: 0.5rem 0;"> 
+      <img src="/img/lego1.png" alt="LegoMyCode Logo" style="height: 30px; margin-right: 0.5rem;">
+      <strong>LegoMyCode</strong>
+   </lmc-nav-link>
+</div>
+
+<!-- Slot por defecto para Enlaces Principales -->
+<lmc-nav-link href="#inicio" active>Inicio</lmc-nav-link>
+<lmc-nav-link href="#componentes">Componentes</lmc-nav-link>
+<lmc-nav-link href="#acerca">Acerca De</lmc-nav-link>
+<lmc-nav-link href="#deshabilitado" disabled>Pronto</lmc-nav-link>
+
+<!-- Slot para Acciones -->
+<div slot="actions">
+  <lmc-basic-button label="Login" @lmc-click=${() => alert('Click en Login!')}></lmc-basic-button>
+</div>
+
+</lmc-navbar>
+<!-- ================== Fin Barra de Navegación ================== -->
+
+
+
+
         <h1>Hola desde LegoMyCode!</h1>
         <p>Demostración de los bloques disponibles:</p>
         <hr>
