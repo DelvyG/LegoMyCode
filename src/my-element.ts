@@ -15,6 +15,7 @@ import './blocks/lmc-form';
 import './blocks/lmc-container'; // Asegúrate que está importado
 import './blocks/lmc-nav-link';
 import './blocks/lmc-navbar';
+import './blocks/lmc-footer';
 
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -304,6 +305,20 @@ export class MyElement extends LitElement {
             </div>
           </lmc-form>
         </lmc-container>
+
+
+
+        <lmc-footer>
+       <lmc-text-display style="font-size: 0.9em;">
+         © ${new Date().getFullYear()} LegoMyCode Project. Todos los derechos reservados.
+       </lmc-text-display>
+       <div style="margin-top: 0.5rem;">
+         <lmc-nav-link href="#privacidad" style="font-size: 0.8em; --lmc-nav-link-padding: 0.2rem 0.5rem;">Política de Privacidad</lmc-nav-link>
+         <span style="margin: 0 0.5em;">|</span>
+         <lmc-nav-link href="#terminos" style="font-size: 0.8em; --lmc-nav-link-padding: 0.2rem 0.5rem;">Términos de Servicio</lmc-nav-link>
+       </div>
+    </lmc-footer>
+
 
       </lmc-container> <!-- Fin del contenedor principal -->
     `;
