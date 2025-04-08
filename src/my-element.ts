@@ -25,6 +25,8 @@ import './blocks/lmc-tab';
 import './blocks/lmc-tab-panel';
 import './blocks/lmc-spinner';
 import './blocks/lmc-snackbar';
+import './theme.css';
+
 
 // Lit y Decoradores
 import { LitElement, css, html } from 'lit';

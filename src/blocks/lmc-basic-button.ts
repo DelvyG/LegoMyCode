@@ -3,78 +3,31 @@ import { customElement, property } from 'lit/decorators.js';
 
 /**
  * @element lmc-basic-button
- * @description Un botón básico y clickeable con diferentes tipos y estado deshabilitado.
- * @version 1.1.0
+ * @description Un botón básico y clickeable con diferentes tipos, apariencias y estado deshabilitado. Utiliza variables globales de tema como fallback.
+ * @version 1.2.0 (Con Tematización Global)
  *
- * @prop {String} label - El texto a mostrar dentro del botón (default: 'Click Me').
- * @prop {Boolean} disabled - Si es true, el botón no es interactivo y aparece atenuado (default: false).
- * @prop {'button' | 'submit' | 'reset'} type - El tipo de botón HTML nativo (default: 'button'). Afecta el comportamiento dentro de formularios.
- * @prop {'primary' | 'secondary' | 'ghost'} [appearance] - (Opcional) Estilo visual predefinido. Requiere estilos CSS adicionales para funcionar.
+ * @prop {String} label - El texto a mostrar dentro del botón (default: 'Click Me'). El contenido del slot por defecto tiene prioridad.
+ * @prop {Boolean} [disabled=false] - Si es true, el botón no es interactivo y aparece atenuado.
+ * @prop {'button' | 'submit' | 'reset'} [type='button'] - El tipo de botón HTML nativo.
+ * @prop {'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link'} [appearance] - Estilo visual predefinido basado en variables globales. Si no se especifica, usa colores 'secondary' por defecto.
  *
- * @cssprop [--lmc-button-background-color] - Color de fondo (fallback: --lmc-global-color-secondary, #eee).
- * @cssprop [--lmc-button-text-color] - Color de texto (fallback: --lmc-global-color-text, #333).
- * @cssprop [--lmc-button-padding] - Padding interno (fallback: calc(var(--lmc-global-spacing-base, 1rem) * 0.5) var(--lmc-global-spacing-base, 1rem)).
- * @cssprop [--lmc-button-border-radius] - Radio del borde (fallback: var(--lmc-global-border-radius-base, 4px)).
- * @cssprop [--lmc-button-opacity-disabled=0.5] - Opacidad cuando está deshabilitado.
- * @cssprop [--lmc-button-primary-bg-color] - Color de fondo para apariencia 'primary' (fallback: --lmc-global-color-primary, blue).
- * @cssprop [--lmc-button-primary-text-color] - Color de texto para apariencia 'primary' (fallback: white).
+ * @slot - Contenido principal del botón, sobrescribe la propiedad `label`.
+ * @slot prefix - Para contenido (ej: lmc-icon) antes del label/slot principal.
+ * @slot suffix - Para contenido (ej: lmc-icon) después del label/slot principal.
  *
  * @fires lmc-click - Se dispara cuando se hace clic en el botón, **solo si `type` no es 'submit'** y el botón no está deshabilitado. No contiene detail.
+ *
+ * @cssprop [--lmc-button-padding] - Padding interno (fallback: basado en variables globales de espaciado).
+ * @cssprop [--lmc-button-border-radius] - Radio del borde (fallback: variable global base).
+ * @cssprop [--lmc-button-opacity-disabled=0.65] - Opacidad cuando está deshabilitado (valor Bootstrap).
+ * @cssprop [--lmc-button-min-height=auto] - Altura mínima si se necesita consistencia vertical.
+ * (Nota: Los colores de fondo y texto se controlan principalmente por las variables globales via 'appearance', aunque se podrían definir específicas como --lmc-button-primary-bg-color si se necesita sobreescribir.)
  */
 @customElement('lmc-basic-button')
 export class LmcBasicButton extends LitElement {
 
-  // --- Estilos ---
-  static styles = css`
-    :host {
-      display: inline-block;
-      /* Variables internas para gestionar fallbacks y apariencias */
-      --_lmc-button-bg-color: var(--lmc-button-background-color, var(--lmc-global-color-secondary, #eee));
-      --_lmc-button-text-color: var(--lmc-button-text-color, var(--lmc-global-color-text, #333));
-    }
-
-    /* Estilos para apariencia primaria */
-    :host([appearance="primary"]) {
-       --_lmc-button-bg-color: var(--lmc-button-primary-bg-color, var(--lmc-global-color-primary, blue));
-       --_lmc-button-text-color: var(--lmc-button-primary-text-color, white);
-    }
-     /* :host([appearance="ghost"]) { ... otros estilos ... } */
-
-    /* Estilos del botón nativo interno */
-    button {
-      padding: var(--lmc-button-padding, calc(var(--lmc-global-spacing-base, 1rem) * 0.5) var(--lmc-global-spacing-base, 1rem));
-      background-color: var(--_lmc-button-bg-color);
-      color: var(--_lmc-button-text-color);
-      border: none;
-      border-radius: var(--lmc-button-border-radius, var(--lmc-global-border-radius-base, 4px));
-      cursor: pointer;
-      font-family: inherit;
-      font-size: inherit;
-      line-height: inherit; /* Asegura consistencia de altura */
-      transition: filter 0.15s ease-out, background-color 0.15s ease-out, color 0.15s ease-out;
-      -webkit-appearance: none; /* Quita estilos por defecto del navegador */
-      appearance: none;
-    }
-
-    button:hover:not([disabled]) {
-      filter: brightness(90%);
-    }
-
-    button:active:not([disabled]) {
-      filter: brightness(80%);
-    }
-
-    /* Estilos cuando el botón nativo está deshabilitado */
-    button[disabled] {
-      cursor: not-allowed;
-      opacity: var(--lmc-button-opacity-disabled, 0.5);
-      filter: none; /* Quita efectos hover/active */
-    }
-  `;
-
-  // --- Propiedades ---
   @property({ type: String })
-  label: string = 'Click Me';
+  label: string = 'Click Me'; // Servirá como fallback si el slot está vacío
 
   @property({ type: Boolean, reflect: true })
   disabled: boolean = false;
@@ -82,10 +35,139 @@ export class LmcBasicButton extends LitElement {
   @property({ type: String })
   type: 'button' | 'submit' | 'reset' = 'button';
 
-  // Opcional: Propiedad para controlar apariencia (requiere CSS en static styles)
   @property({ type: String, reflect: true })
-  appearance?: 'primary' | 'secondary' | 'ghost';
+  appearance?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark' | 'link';
 
+  // --- Estilos ---
+  static styles = css`
+    :host {
+      display: inline-block; /* Se comporta como un botón normal */
+      vertical-align: middle; /* Alinea bien con otros elementos inline */
+    }
+
+    button {
+      /* Reseteo básico y herencia */
+      all: unset; /* Quita casi todos los estilos por defecto del navegador */
+      box-sizing: border-box;
+      display: inline-flex; /* Permite alinear contenido interno (iconos, texto) */
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      cursor: pointer;
+      white-space: nowrap; /* Evita que el texto se parta */
+      user-select: none; /* Evita selección de texto accidental */
+      -webkit-user-select: none;
+
+      /* Estilos Base (Derivados de Tema Global 'secondary' por defecto) */
+      padding: var(--lmc-button-padding, var(--lmc-global-spacing-sm, 0.5rem) var(--lmc-global-spacing-md, 1rem));
+      border-radius: var(--lmc-button-border-radius, var(--lmc-global-border-radius-base, 0.375rem));
+      min-height: var(--lmc-button-min-height, auto);
+      font-family: var(--lmc-global-font-family-base, sans-serif);
+      font-size: var(--lmc-global-font-size-base, 1rem);
+      font-weight: var(--lmc-global-font-weight-base, 400);
+      line-height: var(--lmc-global-line-height-base, 1.5);
+      text-align: center;
+      text-decoration: none; /* Para botones que parecen enlaces */
+
+      /* Colores base (usan 'secondary' si no hay appearance) */
+      background-color: var(--_lmc-button-bg-color, var(--lmc-global-color-secondary, #6c757d));
+      color: var(--_lmc-button-text-color, var(--lmc-global-color-white, #ffffff));
+      border: var(--lmc-global-border-width, 1px) solid transparent; /* Borde transparente para mantener tamaño */
+
+      transition: filter 0.15s ease-out, background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out, box-shadow 0.15s ease-out;
+    }
+
+    /* Estilos por Apariencia - Usan variables globales */
+    :host([appearance="primary"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-primary, #0d6efd);
+       --_lmc-button-text-color: var(--lmc-global-color-white, #ffffff);
+       border-color: var(--_lmc-button-bg-color); /* Borde del mismo color */
+    }
+    :host([appearance="secondary"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-secondary, #6c757d);
+       --_lmc-button-text-color: var(--lmc-global-color-white, #ffffff);
+        border-color: var(--_lmc-button-bg-color);
+    }
+     :host([appearance="success"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-success, #198754);
+       --_lmc-button-text-color: var(--lmc-global-color-white, #ffffff);
+        border-color: var(--_lmc-button-bg-color);
+    }
+     :host([appearance="danger"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-danger, #dc3545);
+       --_lmc-button-text-color: var(--lmc-global-color-white, #ffffff);
+        border-color: var(--_lmc-button-bg-color);
+    }
+     :host([appearance="warning"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-warning, #ffc107);
+       --_lmc-button-text-color: var(--lmc-global-color-dark, #212529); /* Texto oscuro en warning */
+        border-color: var(--_lmc-button-bg-color);
+    }
+     :host([appearance="info"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-info, #0dcaf0);
+       --_lmc-button-text-color: var(--lmc-global-color-dark, #212529); /* Texto oscuro en info */
+        border-color: var(--_lmc-button-bg-color);
+    }
+     :host([appearance="light"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-light, #f8f9fa);
+       --_lmc-button-text-color: var(--lmc-global-color-dark, #212529);
+       border-color: #dee2e6; /* Borde sutil para light */
+    }
+     :host([appearance="dark"]) button {
+       --_lmc-button-bg-color: var(--lmc-global-color-dark, #212529);
+       --_lmc-button-text-color: var(--lmc-global-color-white, #ffffff);
+        border-color: var(--_lmc-button-bg-color);
+    }
+    :host([appearance="link"]) button {
+       --_lmc-button-bg-color: transparent;
+       --_lmc-button-text-color: var(--lmc-global-color-primary, #0d6efd);
+       border-color: transparent;
+       text-decoration: underline;
+    }
+    :host([appearance="link"]) button:hover:not([disabled]) {
+        filter: brightness(70%); /* Oscurece un poco el link */
+    }
+
+
+    /* Estados :hover y :active (aplican a la mayoría de apariencias) */
+    button:hover:not([disabled]) {
+      filter: brightness(90%);
+    }
+    button:active:not([disabled]) {
+      filter: brightness(80%);
+    }
+
+    /* Estado Deshabilitado */
+    button[disabled] {
+      cursor: not-allowed;
+      opacity: var(--lmc-button-opacity-disabled, 0.65); /* Valor Bootstrap */
+      filter: none; /* Quita efectos hover/active */
+      pointer-events: none; /* Asegura no interacción */
+    }
+
+    /* Estilos para contenido sloteado (iconos, etc.) */
+    .label {
+       /* Si necesitas estilos específicos para el texto */
+    }
+    ::slotted(lmc-icon) {
+       /* Ajusta el tamaño o margen del icono si es necesario */
+       font-size: 1.2em; /* Ejemplo */
+    }
+    /* Espacio entre icono y texto si ambos existen */
+    slot[name="prefix"]::slotted(*) + .label,
+    .label + slot[name="suffix"]::slotted(*) {
+       margin-left: var(--lmc-global-spacing-sm, 0.5rem);
+    }
+     slot[name="prefix"]::slotted(*) {
+         margin-right: var(--lmc-global-spacing-sm, 0.5rem);
+     }
+      slot[name="suffix"]::slotted(*) {
+         margin-left: var(--lmc-global-spacing-sm, 0.5rem);
+     }
+
+  `;
+
+  // --- Propiedades (ya definidas arriba) ---
 
   // --- Template (Render) ---
   render() {
@@ -94,44 +176,32 @@ export class LmcBasicButton extends LitElement {
         type=${this.type}
         .disabled=${this.disabled}
         @click=${this._handleClick}
-        part="button" <!-- Parte exportada para estilado externo si se necesita -->
+        part="button"
       >
-        <slot name="prefix"></slot> <!-- Slot para icono/contenido antes -->
+        <slot name="prefix" part="prefix"></slot>
         <span class="label" part="label">
-           <slot>${this.label}</slot> <!-- Slot por defecto para sobreescribir label -->
+           <slot>${this.label}</slot> ${/* Usa la propiedad label como fallback si el slot está vacío */''}
         </span>
-        <slot name="suffix"></slot> <!-- Slot para icono/contenido después -->
+        <slot name="suffix" part="suffix"></slot>
       </button>
     `;
   }
 
-  // --- Lógica y Eventos (CORREGIDO Y COMPLETO) ---
+  // --- Lógica y Eventos ---
   private _handleClick(event: MouseEvent) {
-    console.log(`lmc-basic-button: _handleClick (type=${this.type}, disabled=${this.disabled})`);
-
-    // Si está deshabilitado, no hacer nada más, pero importante detener
-    // la propagación para evitar que otros listeners reaccionen.
+    // No es necesario log aquí a menos que depuremos
     if (this.disabled) {
       event.stopPropagation();
-      event.preventDefault(); // Previene cualquier acción por defecto residual
+      event.preventDefault();
       return;
     }
-
-    // SI Y SOLO SI el tipo NO es submit, disparamos nuestro evento lmc-click.
-    // Para type="submit", dejamos que el evento 'click' nativo continúe
-    // para que el <form> pueda recibirlo y disparar el evento 'submit'.
     if (this.type !== 'submit') {
       this.dispatchEvent(new CustomEvent('lmc-click', {
         bubbles: true,
         composed: true
       }));
-
-      // Considera si los botones que NO son submit deben prevenir
-      // cualquier comportamiento por defecto residual (raro para type=button)
-      // event.preventDefault();
     }
-    // Para type="reset", el navegador se encargará de resetear el formulario
-    // si este botón está dentro de un <form>. No necesitamos hacer nada especial aquí.
+    // El navegador maneja el submit y reset automáticamente
   }
 }
 
