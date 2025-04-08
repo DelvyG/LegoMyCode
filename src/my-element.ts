@@ -20,6 +20,9 @@ import './blocks/lmc-footer';
 import './blocks/lmc-grid';
 import './blocks/lmc-modal';
 import './blocks/lmc-icon';
+import './blocks/lmc-tab-group'; 
+import './blocks/lmc-tab';      
+import './blocks/lmc-tab-panel';
 
 // Lit y Decoradores
 import { LitElement, css, html } from 'lit';
@@ -352,6 +355,49 @@ export class MyElement extends LitElement {
 
         </lmc-container> ${// --- Fin del Contenedor Principal del Contenido ---
                           ''}
+
+${/* --- Sección lmc-tab-group --- */''}
+        <lmc-container padding="1rem" class="demo-section">
+          <h2>lmc-tab-group, lmc-tab, lmc-tab-panel</h2>
+          <p>Organización de contenido en pestañas.</p>
+
+          <lmc-tab-group active-tab-id="panel-b"> {/* Empieza en la pestaña B */}
+
+            ${/* Encabezados de las pestañas */''}
+            <lmc-tab slot="tabs" panel="panel-a">Pestaña A</lmc-tab>
+            <lmc-tab slot="tabs" panel="panel-b">Pestaña B</lmc-tab>
+            <lmc-tab slot="tabs" panel="panel-c">Pestaña C</lmc-tab>
+            <lmc-tab slot="tabs" panel="panel-d" disabled>Deshabilitada</lmc-tab>
+
+            ${/* Paneles de contenido (Deben tener ID que coincida con 'panel' de lmc-tab) */''}
+            <lmc-tab-panel id="panel-a">
+              <h3>Contenido del Panel A</h3>
+              <p>Este es el contenido asociado a la primera pestaña.</p>
+              <lmc-alert type="info" message="Estás viendo el panel A."></lmc-alert>
+            </lmc-tab-panel>
+
+            <lmc-tab-panel id="panel-b">
+              <h3>Contenido del Panel B</h3>
+              <p>Información diferente para la segunda pestaña.</p>
+              <lmc-input label="Campo en Pestaña B:" placeholder="..."></lmc-input>
+            </lmc-tab-panel>
+
+            <lmc-tab-panel id="panel-c">
+              <h3>Contenido del Panel C</h3>
+              <p>Y un tercer panel con más cosas.</p>
+              <ul><li>Item 1</li><li>Item 2</li></ul>
+            </lmc-tab-panel>
+
+            <lmc-tab-panel id="panel-d">
+               <p>Este contenido no debería ser visible porque el tab está deshabilitado.</p>
+            </lmc-tab-panel>
+
+          </lmc-tab-group>
+        </lmc-container>
+
+    </lmc-container>
+
+
 
         ${// --- Pie de Página ---
           ''}
