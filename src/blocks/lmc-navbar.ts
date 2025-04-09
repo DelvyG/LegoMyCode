@@ -1,81 +1,130 @@
 // src/blocks/lmc-navbar.ts
 
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 /**
  * @element lmc-navbar
- * @description Contenedor principal para la barra de navegación superior. Utiliza slots para organizar el contenido (logo, enlaces, acciones).
- * @version 1.0.0
+ * @description Barra de navegación principal para la aplicación.
  *
- * @slot brand - Espacio para colocar el logo o nombre de la marca/sitio (típicamente a la izquierda).
- * @slot - Slot por defecto, destinado a los enlaces de navegación principales (`lmc-nav-link`).
- * @slot actions - Espacio para botones de acción, login, etc. (típicamente a la derecha).
+ * @prop {String} siteTitle - Título principal o nombre del sitio a mostrar (opcional si se usa slot brand).
  *
- * @cssprop [--lmc-navbar-background-color=transparent] - Color de fondo de la barra de navegación.
- * @cssprop [--lmc-navbar-padding=0 1rem] - Padding horizontal de la barra. El padding vertical suele venir del contenido (enlaces, logo).
- * @cssprop [--lmc-navbar-height=auto] - Altura fija si se desea (ej: '60px'). Por defecto se ajusta al contenido.
- * @cssprop [--lmc-navbar-border-bottom] - Para añadir un borde inferior (ej: '1px solid #eee').
- * @cssprop [--lmc-navbar-container-max-width=none] - Ancho máximo del *contenido* dentro de la navbar (útil si se quiere centrar el contenido en un layout más ancho).
- * @cssprop [--lmc-navbar-gap=1rem] - Espacio entre los elementos principales (brand, nav, actions).
+ * @slot brand - Para colocar el logo o título personalizado a la izquierda.
+ * @slot - Para los enlaces de navegación principales (centro/izquierda).
+ * @slot actions - Para elementos a la derecha (botones, menú de usuario, etc.).
+ *
+ * @cssprop [--lmc-navbar-background=var(--lmc-global-color-background, #fff)] - Color de fondo.
+ * @cssprop [--lmc-navbar-color=var(--lmc-global-color-text-default, #212529)] - Color de texto por defecto.
+ * @cssprop [--lmc-navbar-padding=0 var(--lmc-global-spacing-md, 1rem)] - Padding horizontal.
+ * @cssprop [--lmc-navbar-height=60px] - Altura de la barra.
+ * @cssprop [--lmc-navbar-box-shadow=0 2px 4px rgba(0, 0, 0, 0.1)] - Sombra inferior.
+ * @cssprop [--lmc-navbar-brand-gap=var(--lmc-global-spacing-sm, 0.5rem)] - Espacio junto al logo/título.
+ * @cssprop [--lmc-navbar-link-gap=var(--lmc-global-spacing-md, 1rem)] - Espacio entre links principales.
+ * @cssprop [--lmc-navbar-action-gap=var(--lmc-global-spacing-sm, 0.5rem)] - Espacio entre elementos de acción.
  */
 @customElement('lmc-navbar')
 export class LmcNavbar extends LitElement {
+  @property({ type: String, attribute: 'site-title' })
+  siteTitle = '';
 
   static styles = css`
     :host {
-      display: block; /* Ocupa el ancho disponible */
-      background-color: var(--lmc-navbar-background-color, transparent);
-      border-bottom: var(--lmc-navbar-border-bottom);
-      box-sizing: border-box;
+      display: block;
+      background-color: var(--lmc-navbar-background, var(--lmc-global-color-background, #fff));
+      color: var(--lmc-navbar-color, var(--lmc-global-color-text-default, #212529));
+      box-shadow: var(--lmc-navbar-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+      /* Transición suave para cambio de tema */
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     }
 
     .navbar-container {
       display: flex;
-      align-items: center; /* Centra los elementos verticalmente */
-      justify-content: space-between; /* Espacio máximo entre brand/nav y actions */
-      padding: var(--lmc-navbar-padding, 0 1rem);
-      height: var(--lmc-navbar-height, auto);
-      max-width: var(--lmc-navbar-container-max-width, none);
-      margin-inline: auto; /* Centra el contenido si max-width está definido */
-      gap: var(--lmc-navbar-gap, 1rem); /* Espacio entre secciones */
-      box-sizing: border-box;
+      align-items: center;
+      justify-content: space-between; /* Empuja brand/links y actions a los extremos */
+      padding: var(--lmc-navbar-padding, 0 var(--lmc-global-spacing-md, 1rem));
+      height: var(--lmc-navbar-height, 60px);
+      max-width: var(--lmc-container-max-width, 1200px); /* Centra el contenido interno si se aplica max-width */
+      margin: 0 auto; /* Centra el contenido interno */
     }
 
-    .nav-links {
+    .left-section, .right-section {
       display: flex;
-      flex-grow: 1; /* Permite que ocupe el espacio sobrante si es necesario */
-      justify-content: center; /* Centra los enlaces si hay espacio */
-      gap: var(--lmc-navbar-link-gap, 0.5rem); /* Espacio entre enlaces individuales */
+      align-items: center;
     }
 
-    /* Estilos para los slots para asegurar que flex funcione */
-    ::slotted(*) {
-        /* Podríamos añadir estilos base a los elementos sloteados si es necesario */
+    .left-section {
+      gap: var(--lmc-navbar-brand-gap, var(--lmc-global-spacing-md, 1rem)); /* Espacio entre brand y links */
     }
-    slot[name="brand"], slot[name="actions"] {
-        display: flex;
+
+    .brand-slot ::slotted(*) {
+        display: flex; /* Asegura que el slot se comporte bien con flex */
+        align-items: center;
+        /* Estilos específicos para el logo si es necesario */
+    }
+    .brand-slot ::slotted(img) {
+        max-height: calc(var(--lmc-navbar-height, 60px) * 0.6); /* Ajusta el 60% según necesites */
+        width: auto;
+        object-fit: contain;
+    }
+
+    .default-slot {
+       display: flex;
+       align-items: center;
+       gap: var(--lmc-navbar-link-gap, var(--lmc-global-spacing-md, 1rem));
+    }
+    /* Estilos para los links dentro de la navbar */
+    .default-slot ::slotted(lmc-nav-link) {
+        /* Puedes añadir estilos específicos aquí, ej: text-decoration: none; */
+        color: inherit; /* Hereda el color de la navbar */
+    }
+     .default-slot ::slotted(lmc-nav-link[active]) {
+         /* Estilo para link activo */
+         font-weight: bold;
+         color: var(--lmc-global-color-primary, blue);
+     }
+
+
+    .right-section {
+        gap: var(--lmc-navbar-action-gap, var(--lmc-global-spacing-sm, 0.5rem));
+    }
+    .actions-slot ::slotted(*) {
+        display: flex; /* Asegura buen comportamiento */
         align-items: center;
     }
+    /* Estilos específicos para el botón de tema dentro de las acciones */
+     .actions-slot ::slotted(lmc-basic-button) {
+         /* Ajusta el color del icono dentro del botón para que coincida con el texto */
+         --lmc-icon-color: currentColor;
+     }
 
+    .site-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin: 0;
+      white-space: nowrap;
+    }
   `;
 
   render() {
     return html`
-      <div class="navbar-container" part="container">
-        <slot name="brand"></slot>
-        <div class="nav-links" part="nav-links">
-           <slot></slot> <!-- Slot por defecto para los lmc-nav-link -->
+      <nav class="navbar-container" aria-label="Main navigation">
+        <div class="left-section">
+          <div class="brand-slot">
+            <slot name="brand">
+              <!-- Muestra el título solo si no hay nada en el slot 'brand' -->
+              ${this.siteTitle ? html`<span class="site-title">${this.siteTitle}</span>` : ''}
+            </slot>
+          </div>
+          <div class="default-slot">
+            <slot></slot> <!-- Links principales -->
+          </div>
         </div>
-        <slot name="actions"></slot>
-      </div>
+        <div class="right-section">
+          <div class="actions-slot">
+            <slot name="actions"></slot> <!-- Botones/acciones -->
+          </div>
+        </div>
+      </nav>
     `;
-  }
-}
-
-// Declaración TypeScript para el registro global del elemento
-declare global {
-  interface HTMLElementTagNameMap {
-    'lmc-navbar': LmcNavbar;
   }
 }

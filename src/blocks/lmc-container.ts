@@ -1,82 +1,94 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 /**
  * @element lmc-container
- * @description Componente contenedor genérico para envolver otros bloques LegoMyCode con control de ancho, centrado y padding.
- * @version 1.0.0
+ * @description Un contenedor genérico para agrupar contenido, aplicar padding y opcionalmente limitar su ancho y centrarlo.
+ * La personalización principal se realiza a través de variables CSS. Las propiedades/atributos sirven como alternativa.
+ * @version 1.1.0 - Refinado para priorizar CSS Vars
  *
- * @cssprop [--lmc-container-background-color=transparent] - Color de fondo del contenedor.
- * @cssprop [--lmc-container-padding=0] - Padding interno del contenedor. Sobrescribe la propiedad `padding`.
- * @cssprop [--lmc-container-max-width=none] - Ancho máximo del contenedor. Sobrescribe la propiedad `maxWidth`.
- * @cssprop [--lmc-container-margin-inline=auto] - Margen horizontal usado para centrar contenido cuando está activo el centrado.
+ * @slot - El contenido a renderizar dentro del contenedor.
+ *
+ * @cssprop [--lmc-container-padding=var(--lmc-global-spacing-md, 1rem)] - Padding interno del contenedor.
+ * @cssprop [--lmc-container-max-width=1200px] - Ancho máximo del contenedor. Usa 'none' para ancho completo.
+ * @cssprop [--lmc-container-margin-inline=auto] - Margen horizontal. 'auto' centra el contenedor si tiene max-width.
+ * @cssprop [--lmc-container-background=transparent] - Color de fondo.
+ * @cssprop [--lmc-container-border=none] - Borde.
+ * @cssprop [--lmc-container-border-radius=0] - Radio del borde.
+ *
+ * @attr {string} padding - Alternativa para establecer el padding vía atributo (sobrescribe --lmc-container-padding si se usa).
+ * @attr {string} max-width - Alternativa para establecer el ancho máximo vía atributo (sobrescribe --lmc-container-max-width si se usa).
+ * @attr {string} margin-inline - Alternativa para establecer el margen horizontal vía atributo (sobrescribe --lmc-container-margin-inline si se usa).
  */
 @customElement('lmc-container')
 export class LmcContainer extends LitElement {
-  /**
-   * Controla el ancho máximo del contenedor. Ejemplos: '1280px', '80ch'.
-   * @attr max-width
-   */
-  @property({ type: String, attribute: 'max-width', reflect: true }) // reflect: true ayuda a aplicar estilos basados en el atributo
-  maxWidth: string = 'none';
 
-  /**
-   * Si es true y maxWidth está definido (y no es 'none'), centra el contenedor horizontalmente.
-   * @attr center-content
-   */
-  @property({ type: Boolean, attribute: 'center-content', reflect: true }) // reflect: true ayuda a aplicar estilos basados en el atributo
-  centerContent: boolean = false;
+  // Propiedades opcionales para permitir configuración vía atributo/propiedad.
+  // No usan reflect: true porque su efecto principal es establecer la variable CSS interna en updated().
+  @property({ type: String })
+  padding?: string;
 
-  /**
-   * Padding interno del contenedor. Ejemplos: '1rem', '20px', 'var(--lmc-global-spacing-md)'.
-   * @attr padding
-   */
-  @property({ type: String, reflect: true }) // reflect: true ayuda a aplicar estilos basados en el atributo
-  padding: string = '0';
+  @property({ type: String, attribute: 'max-width' })
+  maxWidth?: string;
+
+  @property({ type: String, attribute: 'margin-inline' })
+  marginInline?: string;
 
   static styles = css`
     :host {
-      /* Estilos base del contenedor */
-      display: block;
-      box-sizing: border-box; /* Importante para que el padding no aumente el tamaño total */
-      background-color: var(--lmc-container-background-color, transparent);
+      display: block; /* Asegura que ocupa espacio */
+      width: 100%; /* Ocupa el ancho disponible por defecto */
+      box-sizing: border-box; /* Padding incluido en el ancho/alto */
 
-      /* Aplica el padding usando la variable CSS o la propiedad reflejada */
-      padding: var(--lmc-container-padding, var(--_internal-padding, 0));
-
-      /* Aplica el ancho máximo usando la variable CSS o la propiedad reflejada */
-      max-width: var(--lmc-container-max-width, var(--_internal-max-width, none));
+      /* Aplica los estilos usando las variables CSS públicas como fuente principal */
+      /* Los fallbacks usan variables globales o valores sensatos */
+      padding: var(--lmc-container-padding, var(--lmc-global-spacing-md, 1rem));
+      max-width: var(--lmc-container-max-width, 1200px); /* Default razonable */
+      margin-inline: var(--lmc-container-margin-inline, auto); /* Centrado por defecto si max-width aplica */
+      background-color: var(--lmc-container-background, transparent);
+      border: var(--lmc-container-border, none);
+      border-radius: var(--lmc-container-border-radius, 0);
     }
 
-    /* Estilos para centrar: se aplican SOLO si el host tiene center-content y un max-width válido */
-    :host([center-content]:not([max-width='none'])[max-width]) {
-       /* Si se cumplen las condiciones, aplica el margen automático */
-       margin-inline: var(--lmc-container-margin-inline, auto);
+    /* Asegura que si max-width es 'none', realmente ocupe todo el ancho */
+    :host([style*="--lmc-container-max-width: none"]) {
+        max-width: none;
+        /* Si max-width es none, el centrado con margin: auto no tiene efecto, lo cual está bien */
+    }
+
+    /* Si se establece max-width explícitamente a 'none' vía atributo, también aplica */
+    :host([max-width="none"]) {
+       max-width: none;
+       /* Podríamos forzar margin-inline a 0 si es necesario, pero 'auto' no hará nada */
+       /* margin-inline: 0; */
     }
   `;
 
-  // El render es ahora mucho más simple, solo necesita el slot.
-  // Los estilos se manejan completamente en CSS.
+  // El render sigue siendo simple
   render() {
     return html`<slot></slot>`;
   }
 
-  // Este método ya no es necesario, lo eliminamos.
-  // private _computeStyle(): string { ... }
-
-  // Necesitamos actualizar las variables CSS internas cuando cambian las propiedades
-  // para que los fallbacks en :host funcionen correctamente.
-  protected updated(changedProperties: Map<string | number | symbol, unknown>): void {
+  /**
+   * Actualiza las variables CSS directamente en el :host si las propiedades
+   * correspondientes (padding, maxWidth, marginInline) han sido establecidas.
+   * Esto permite que los atributos/propiedades sobrescriban las variables CSS globales o de contenedores padre,
+   * pero el estilo final siempre se lee desde las variables CSS en :host.
+   */
+  protected updated(changedProperties: PropertyValues<this>): void {
     super.updated(changedProperties);
-    if (changedProperties.has('padding')) {
-      this.style.setProperty('--_internal-padding', this.padding);
-    }
-    if (changedProperties.has('maxWidth')) {
-      this.style.setProperty('--_internal-max-width', this.maxWidth);
-    }
-    // No es necesario para centerContent porque el selector CSS lo maneja con reflect:true
-  }
 
+    if (changedProperties.has('padding') && this.padding !== undefined) {
+      // Establece la variable CSS pública directamente en este host
+      this.style.setProperty('--lmc-container-padding', this.padding);
+    }
+    if (changedProperties.has('maxWidth') && this.maxWidth !== undefined) {
+      this.style.setProperty('--lmc-container-max-width', this.maxWidth);
+    }
+     if (changedProperties.has('marginInline') && this.marginInline !== undefined) {
+      this.style.setProperty('--lmc-container-margin-inline', this.marginInline);
+    }
+  }
 }
 
 // Registro en HTMLElementTagNameMap
