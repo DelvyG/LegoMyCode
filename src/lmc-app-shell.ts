@@ -172,7 +172,23 @@ export class LmcAppShell extends LitElement {
 },
 // --------------------
 
-
+ // --- RUTA TABS ---
+ {
+  path: '/tabs',
+  action: async (context: RouteContext, commands: Commands) => {
+    const routePath = context.pathname;
+    console.log(`[Router] Action started for ${routePath}`);
+    try {
+      await import('./pages/lmc-page-tabs.ts');
+      console.log(`[Router] Module ./pages/lmc-page-tabs.ts loaded successfully for ${routePath}`);
+      return commands.component('lmc-page-tabs');
+    } catch (error) {
+      console.error(`[Router] Error loading module for ${routePath}:`, error);
+      return this._handleRouteError(outlet, commands, routePath, error);
+    }
+  },
+},
+// ---------------
 
 
 
@@ -241,6 +257,7 @@ export class LmcAppShell extends LitElement {
         <lmc-nav-link href="/buttons">Buttons</lmc-nav-link>
         <lmc-nav-link href="/forms">Forms</lmc-nav-link>
         <lmc-nav-link href="/feedback">Feedback</lmc-nav-link>
+        <lmc-nav-link href="/tabs">Tabs</lmc-nav-link>
         <!-- Más links irán aquí -->
 
         <!-- Actions -->

@@ -1,55 +1,61 @@
-// src/blocks/lmc-tab-panel.ts
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 /**
  * @element lmc-tab-panel
- * @description Representa el panel de contenido asociado a una `lmc-tab` dentro de un `lmc-tab-group`.
- * @version 1.0.0
+ * @description Panel de contenido asociado a un `lmc-tab`. Aplica padding interno. Su visibilidad es controlada por el padre.
+ * @version 1.3.0 - Reintroduced internal padding for content spacing.
  *
- * @prop {Boolean} [active=false] - (Gestionado por lmc-tab-group) Indica si este panel es el activo y debe mostrarse.
- * @prop {String} id - ID único para este panel, referenciado por la propiedad `panel` de `lmc-tab`. Requerido.
+ * @prop {boolean} [active=false] - Indica si este panel está activo.
+ * @prop {string} id! - ID único.
  *
- * @slot - El contenido HTML a mostrar cuando esta pestaña esté activa.
+ * @slot - El contenido HTML de este panel.
  *
- * @cssprop [--lmc-tab-panel-padding=1.5rem] - Padding interno del panel de contenido.
+ * @cssprop [--lmc-tab-panel-padding=var(--lmc-global-spacing-lg, 1.5rem)] - Padding interno del panel.
  */
 @customElement('lmc-tab-panel')
 export class LmcTabPanel extends LitElement {
 
   @property({ type: Boolean, reflect: true })
-  active: boolean = false;
+  active = false;
 
-  // Forzamos a que el ID sea requerido
   @property({ type: String, reflect: true })
-  override id!: string;
+  id!: string;
 
   static styles = css`
     :host {
-      display: none; /* Oculto por defecto */
-      padding: var(--lmc-tab-panel-padding, 1.5rem);
+      display: block; /* El padre controla si es 'none' o 'block' */
       box-sizing: border-box;
+      color: var(--lmc-global-color-text-default);
+      /* --- PADDING INTERNO APLICADO AQUÍ --- */
+      padding: var(--lmc-tab-panel-padding, var(--lmc-global-spacing-lg, 1.5rem)); /* 24px por defecto en todos lados */
+      /* Puedes ajustar los lados si quieres: */
+      /* padding-top: var(--lmc-tab-panel-padding-top, var(--lmc-global-spacing-lg, 1.5rem)); */
+      /* padding-bottom: var(--lmc-tab-panel-padding-bottom, var(--lmc-global-spacing-lg, 1.5rem)); */
+      /* padding-left: var(--lmc-tab-panel-padding-x, var(--lmc-global-spacing-md, 1rem)); */
+      /* padding-right: var(--lmc-tab-panel-padding-x, var(--lmc-global-spacing-md, 1rem)); */
+      /* --- FIN PADDING --- */
     }
 
-    :host([active]) {
-      display: block; /* Visible cuando está activo */
+    :host([hidden]) { /* Asegurar ocultación si usamos atributo hidden */
+        display: none;
     }
   `;
 
-   connectedCallback(): void {
-       super.connectedCallback();
-       this.setAttribute('role', 'tabpanel');
-       // Aseguramos que el id exista aunque no se ponga en el html (menos ideal)
-       if (!this.id) {
-           this.id = `lmc-panel-${Math.random().toString(36).substring(2)}`;
-           console.warn('lmc-tab-panel: Se generó un ID automáticamente. Es recomendable asignar un ID explícito.', this);
-       }
-       // Nota: El aria-labelledby debería establecerlo el tab-group al saber qué tab lo controla
-   }
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'tabpanel');
+    // Asegurar estado inicial correcto (aunque el CSS del padre lo maneje)
+    if (!this.hasAttribute('active')) {
+        this.active = false; // Por si acaso no se define inicialmente
+    }
+    // this.hidden = !this.active; // Comentado si el padre usa display:none/block
+  }
+
+  // No necesitamos 'updated' si el padre controla la visibilidad con CSS y [active]
 
   render() {
-    // Ocultamos con CSS, así que solo renderizamos el slot
-    return html`<slot part="content"></slot>`;
+    return html`<slot></slot>`;
   }
 }
 
