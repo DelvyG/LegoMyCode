@@ -1,10 +1,10 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 
 /**
  * @element lmc-navbar
- * @description Barra de navegación principal para la aplicación.
- * @version 1.1.0 - Usa fallbacks globales
+ * @description Barra de navegación principal para la aplicación, con diseño responsive.
+ * @version 1.4.0 - Añadido cierre automático del menú al hacer clic en enlaces
  * @slot brand - Para colocar el logo o título personalizado a la izquierda.
  * @slot - Para los enlaces de navegación principales (centro/izquierda).
  * @slot actions - Para elementos a la derecha (botones, menú de usuario, etc.).
@@ -19,108 +19,210 @@ import { customElement, property } from 'lit/decorators.js';
  */
 @customElement('lmc-navbar')
 export class LmcNavbar extends LitElement {
-  @property({ type: String, attribute: 'site-title' })
-  siteTitle = '';
+    @property({ type: String, attribute: 'site-title' })
+    siteTitle = '';
 
-  static styles = css`
-    :host {
-      display: block;
-      /* Fallbacks globales */
-      background-color: var(--lmc-navbar-background, var(--lmc-global-color-background, #fff));
-      color: var(--lmc-navbar-color, var(--lmc-global-color-text-default, #212529));
-      box-shadow: var(--lmc-navbar-box-shadow, var(--lmc-global-box-shadow-sm));
-      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    }
+    @state() private _isMenuOpen = false;
 
-    .navbar-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--lmc-navbar-padding, 0 var(--lmc-global-spacing-md, 1rem));
-      height: var(--lmc-navbar-height, 60px);
-      max-width: var(--lmc-container-max-width, 1200px); /* Usa la misma var que lmc-container */
-      margin: 0 auto;
-    }
+    @query('#menu-button') menuButton!: HTMLElement;
+    @query('#menu-content') menuContent!: HTMLElement;
 
-    .left-section, .right-section {
-      display: flex;
-      align-items: center;
-    }
+    static styles = css`
+        :host {
+            display: block;
+            background-color: var(--lmc-navbar-background, var(--lmc-global-color-background, #fff));
+            color: var(--lmc-navbar-color, var(--lmc-global-color-text-default, #212529));
+            box-shadow: var(--lmc-navbar-box-shadow, var(--lmc-global-box-shadow-sm));
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
 
-    .left-section {
-      gap: var(--lmc-navbar-brand-gap, var(--lmc-global-spacing-md, 1rem));
-    }
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--lmc-navbar-padding, 0 var(--lmc-global-spacing-md, 1rem));
+            height: var(--lmc-navbar-height, 60px);
+            max-width: 100%;
+            margin: 0 auto;
+        }
 
-    .brand-slot ::slotted(*) {
-        display: flex;
-        align-items: center;
-    }
-    .brand-slot ::slotted(img) {
-        max-height: calc(var(--lmc-navbar-height, 60px) * 0.6);
-        width: auto;
-        object-fit: contain;
-    }
+        .left-section, .right-section {
+            display: flex;
+            align-items: center;
+        }
 
-    .default-slot {
-       display: flex;
-       align-items: center;
-       gap: var(--lmc-navbar-link-gap, var(--lmc-global-spacing-md, 1rem));
-    }
-    .default-slot ::slotted(lmc-nav-link) {
-        color: inherit;
-    }
-     .default-slot ::slotted(lmc-nav-link[active]) {
-         font-weight: bold;
-         color: var(--lmc-global-color-primary); /* Hereda color primario global */
-     }
+        .left-section {
+            gap: var(--lmc-navbar-brand-gap, var(--lmc-global-spacing-md, 1rem));
+        }
 
-    .right-section {
-        gap: var(--lmc-navbar-action-gap, var(--lmc-global-spacing-sm, 0.5rem));
-    }
-    .actions-slot ::slotted(*) {
-        display: flex;
-        align-items: center;
-    }
-     .actions-slot ::slotted(lmc-basic-button) {
-         color: inherit; /* Asegura que herede color de navbar para icono */
-     }
-     /* Ajuste específico para icono dentro de botón ghost en navbar */
-     .actions-slot ::slotted(lmc-basic-button[appearance="ghost"]) {
-         color: var(--lmc-global-color-text-muted); /* Podría ser mejor un gris */
-     }
-      .actions-slot ::slotted(lmc-basic-button[appearance="ghost"]:hover) {
-         color: var(--lmc-global-color-text-default); /* Color normal al hacer hover */
-     }
+        .brand-slot ::slotted(*) {
+            display: flex;
+            align-items: center;
+        }
+        
+        .brand-slot ::slotted(img) {
+            max-height: calc(var(--lmc-navbar-height, 60px) * 0.6);
+            width: auto;
+            object-fit: contain;
+        }
 
+        .default-slot {
+            display: flex;
+            align-items: center;
+            gap: var(--lmc-navbar-link-gap, var(--lmc-global-spacing-md, 1rem));
+        }
+        
+        .default-slot ::slotted(lmc-nav-link) {
+            color: inherit;
+            white-space: nowrap;
+        }
+        
+        .default-slot ::slotted(lmc-nav-link[active]) {
+            font-weight: bold;
+            color: var(--lmc-global-color-primary); /* Hereda color primario global */
+        }
 
-    .site-title {
-      font-size: 1.25rem;
-      font-weight: bold;
-      margin: 0;
-      white-space: nowrap;
-    }
-  `;
+        /* Estilos para el título del sitio */
+        .site-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin: 0;
+            white-space: nowrap;
+        }
+        
+        .menu-button {
+            display: none; /* Oculta el botón de menú en pantallas grandes */
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+        }
 
-  // render() como estaba antes
-  render() {
-    return html`
-      <nav class="navbar-container" aria-label="Main navigation">
-        <div class="left-section">
-          <div class="brand-slot">
-            <slot name="brand">
-              ${this.siteTitle ? html`<span class="site-title">${this.siteTitle}</span>` : ''}
-            </slot>
-          </div>
-          <div class="default-slot">
-            <slot></slot> <!-- Links principales -->
-          </div>
-        </div>
-        <div class="right-section">
-          <div class="actions-slot">
-            <slot name="actions"></slot> <!-- Botones/acciones -->
-          </div>
-        </div>
-      </nav>
+        .actions-slot {
+            display: flex;
+            align-items: center;
+            gap: var(--lmc-navbar-action-gap, var(--lmc-global-spacing-sm, 0.5rem));
+        }
+
+        /* Estilos específicos para móvil */
+        @media (max-width: 900px) {
+            .menu-button {
+                display: block;
+            }
+            
+            .default-slot {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: var(--lmc-navbar-height, 60px);
+                left: 0;
+                width: 100%;
+                background-color: var(--lmc-navbar-background, var(--lmc-global-color-background, #fff));
+                box-shadow: var(--lmc-global-box-shadow-sm);
+                z-index: 10;
+                align-items: start;
+                padding: 0.5rem 1rem;
+            }
+            
+            .default-slot.open {
+                display: flex;
+            }
+            
+            .default-slot ::slotted(*) {
+                margin: 0.5rem 0;
+                width: 100%;
+            }
+        }
     `;
+
+    connectedCallback() {
+        super.connectedCallback();
+        // Conectar el observador después de que el componente sea conectado al DOM
+        this.addEventListener('click', this._handleMenuItemClick);
+    }
+
+    disconnectedCallback() {
+        // Eliminar el observador cuando el componente sea desconectado del DOM
+        this.removeEventListener('click', this._handleMenuItemClick);
+        super.disconnectedCallback();
+    }
+
+    private _toggleMenu() {
+        this._isMenuOpen = !this._isMenuOpen;
+        this.requestUpdate();
+    }
+
+    private _closeMenu() {
+        if (this._isMenuOpen) {
+            this._isMenuOpen = false;
+            this.requestUpdate();
+        }
+    }
+
+    private _handleMenuItemClick = (event: Event) => {
+        // Identificar si el clic fue en un elemento del menú (un enlace o similar)
+        const path = event.composedPath();
+        
+        // Verificar si el menú está abierto y si el clic fue dentro del área del menú pero no en el botón de menú
+        if (this._isMenuOpen) {
+            // Comprobar si se hizo clic en un elemento del menú
+            for (const element of path) {
+                if (element instanceof HTMLElement) {
+                    // Solo cerramos si el clic fue en un elemento de navegación dentro del menú
+                    // y no en el botón de menú
+                    if (
+                        element.tagName === 'A' || 
+                        element.tagName === 'LMC-NAV-LINK' || 
+                        element.tagName === 'BUTTON'
+                    ) {
+                        // Verificar que no sea el botón del menú
+                        if (element !== this.menuButton) {
+                            // Cerrar el menú solo si estamos en modo móvil
+                            const isMobileView = window.matchMedia('(max-width: 900px)').matches;
+                            if (isMobileView) {
+                                this._closeMenu();
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    render() {
+        return html`
+            <nav class="navbar-container" aria-label="Main navigation">
+                <div class="left-section">
+                    <div class="brand-slot">
+                        <slot name="brand">
+                            ${this.siteTitle ? html`<span class="site-title">${this.siteTitle}</span>` : ''}
+                        </slot>
+                    </div>
+                    <button id="menu-button" class="menu-button" @click=${this._toggleMenu} aria-expanded="${this._isMenuOpen}">
+                        Menu
+                    </button>
+                </div>
+                
+                <div id="menu-content" class="default-slot ${this._isMenuOpen ? 'open' : ''}">
+                    <slot></slot>
+                </div>
+                
+                <div class="right-section">
+                    <div class="actions-slot">
+                        <slot name="actions"></slot>
+                    </div>
+                </div>
+            </nav>
+        `;
+    }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'lmc-navbar': LmcNavbar;
   }
 }

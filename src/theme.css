@@ -124,3 +124,10 @@ a:hover {
     color: var(--lmc-global-link-hover-color);
     text-decoration: underline;
 }
+
+
+:root {
+  --lmc-breakpoint-small: 600px;
+  --lmc-breakpoint-medium: 900px;
+  --lmc-breakpoint-large: 1200px;
+}

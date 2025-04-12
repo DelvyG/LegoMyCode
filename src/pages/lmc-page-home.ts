@@ -26,10 +26,11 @@ export class LmcPageHome extends LitElement {
     }
 
     .button-container {
-        display: flex;
-        justify-content: center;
-        gap: var(--lmc-global-spacing-md, 1rem);
-    }
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Permite que los botones se envuelvan a la siguiente línea */
+    gap: var(--lmc-global-spacing-md, 1rem);
+}
   `;
 
   render() {
