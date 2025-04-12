@@ -1,9 +1,10 @@
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
-import { map } from 'lit/directives/map.js'; // Para iterar sobre las opciones
+import { map } from 'lit/directives/map.js';
 
-// Definimos una interfaz para la estructura de las opciones
+// Interfaz para las opciones (exportada aquí mismo)
 export interface LmcSelectOption {
   value: string | number;
   label: string;
@@ -11,146 +12,128 @@ export interface LmcSelectOption {
 }
 
 /**
- * @description Un componente select (desplegable) reutilizable.
- * @version 1.0.0
- *
- * @prop {String} label - Etiqueta opcional que se muestra encima o al lado del select.
- * @prop {String | Number} value - El valor de la opción actualmente seleccionada.
- * @prop {LmcSelectOption[]} options - Array de objetos para las opciones del select. Cada objeto debe tener 'value' y 'label', opcionalmente 'disabled'.
- * @prop {String} placeholder - Texto opcional para la primera opción deshabilitada (sirve como indicación).
- * @prop {Boolean} disabled - Si el select está deshabilitado.
- * @prop {Boolean} required - Si el select es obligatorio en un formulario.
- *
- * @cssprop [--lmc-select-label-color=inherit] - Color del texto de la etiqueta.
- * @cssprop [--lmc-select-background-color=var(--lmc-global-color-background, white)] - Color de fondo.
- * @cssprop [--lmc-select-text-color=var(--lmc-global-color-text, black)] - Color del texto.
- * @cssprop [--lmc-select-border=1px solid var(--lmc-global-color-border, grey)] - Borde.
- * @cssprop [--lmc-select-border-radius=var(--lmc-global-border-radius-base, 4px)] - Radio del borde.
- * @cssprop [--lmc-select-padding=0.5em 0.75em] - Padding interno. (Padding derecho puede necesitar ajuste para el arrow).
- * @cssprop [--lmc-select-focus-border-color=var(--lmc-global-color-primary, blue)] - Color del borde al enfocar.
- * @cssprop [--lmc-select-disabled-opacity=0.5] - Opacidad cuando está deshabilitado.
- * @cssprop [--lmc-select-arrow-color=var(--lmc-global-color-text, black)] - Color de la flecha desplegable (si se personaliza).
- *
- * @fires lmc-change - Se dispara cuando se selecciona una opción diferente. detail: { value: string | number }
+ * @element lmc-select
+ * @description Control de selección desplegable estilizado. Recibe las opciones vía la propiedad 'options'.
+ * @version 2.3.1 - Corregido error de re-exportación de tipo.
+ * // ... resto del JSDoc ...
  */
 @customElement('lmc-select')
 export class LmcSelect extends LitElement {
+  @property({ type: String }) label?: string;
+  @property({ type: String }) name?: string;
+  @property({ type: String }) value: string | number = '';
+  @property({ type: Array }) options: LmcSelectOption[] = [];
+  @property({ type: Boolean, reflect: true }) disabled = false;
+  @property({ type: Boolean, reflect: true }) required = false;
 
-  // --- Estilos ---
+  @state() private _invalid = false;
+
   static styles = css`
     :host {
-      display: block; /* Selects suelen ser block o inline-block */
-      width: auto;
+      display: block; width: 100%; position: relative; opacity: 1;
+      cursor: default; color: var(--lmc-global-color-text-default);
+      transition: opacity 0.2s ease;
     }
-
-    .select-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25em;
-    }
-
-    label {
-      font-size: 0.9em;
-      color: var(--lmc-select-label-color, inherit);
-      cursor: default;
-    }
-
+    :host([disabled]) { opacity: var(--lmc-global-disabled-opacity, 0.6); cursor: not-allowed; }
     select {
-      font-family: inherit;
-      font-size: 1em;
-      /* Añadir padding derecho extra para no solapar la flecha por defecto */
-      padding: var(--lmc-select-padding, 0.5em 2.5em 0.5em 0.75em);
-      border: var(--lmc-select-border, 1px solid var(--lmc-global-color-border, grey));
-      border-radius: var(--lmc-select-border-radius, var(--lmc-global-border-radius-base, 4px));
-      background-color: var(--lmc-select-background-color, var(--lmc-global-color-background, white));
-      color: var(--lmc-select-text-color, var(--lmc-global-color-text, black));
-      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-      box-sizing: border-box;
-      width: 100%;
-      cursor: pointer;
-      /* Apariencia (permite estilizar flecha, aunque puede ser complejo) */
-      /* appearance: none; */
-      /* background-image: url('data:image/svg+xml;charset=US-ASCII,<svg ...>'); */ /* Ejemplo de flecha SVG */
-      /* background-repeat: no-repeat; */
-      /* background-position: right 0.75em center; */
-      /* background-size: 0.65em auto; */
+      display: block; box-sizing: border-box; width: 100%;
+      padding: var(--lmc-select-padding, var(--lmc-input-padding, var(--lmc-global-spacing-xs, 0.4rem) 2.2rem var(--lmc-global-spacing-xs, 0.4rem) var(--lmc-global-spacing-sm, 0.8rem)));
+      border: var(--lmc-select-border, var(--lmc-input-border, var(--lmc-global-border-width, 1px) solid var(--lmc-global-color-border, #dee2e6)));
+      border-radius: var(--lmc-select-border-radius, var(--lmc-input-border-radius, var(--lmc-global-border-radius-md, 0.375rem)));
+      background-color: var(--lmc-select-background, var(--lmc-input-background, var(--lmc-global-color-background, #fff)));
+      color: var(--lmc-select-color, var(--lmc-input-color, inherit));
+      font-size: var(--lmc-select-font-size, inherit); font-family: inherit;
+      line-height: var(--lmc-global-line-height-base, 1.5);
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      background-image: var(--lmc-select-arrow-image, url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236c757d' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"));
+      background-repeat: no-repeat;
+      background-position: right var(--lmc-global-spacing-sm, 0.8rem) center;
+      background-size: 16px 12px; cursor: pointer;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, background-color 0.3s ease, color 0.3s ease;
     }
-
-    select:focus,
-    select:focus-visible {
-      outline: none;
-      border-color: var(--lmc-select-focus-border-color, var(--lmc-global-color-primary, blue));
-      /* box-shadow: 0 0 0 2px rgba(var(--lmc-global-color-primary-rgb, 0, 123, 255), 0.25); */
+    select:focus {
+      border-color: var(--lmc-select-focus-border-color, var(--lmc-global-color-primary, #86b7fe));
+      outline: 0;
+      box-shadow: var(--lmc-select-focus-box-shadow, 0 0 0 0.2rem color-mix(in srgb, var(--lmc-global-color-primary, blue) 25%, transparent));
     }
-
-    select[disabled] {
-      cursor: not-allowed;
-      opacity: var(--lmc-select-disabled-opacity, 0.5);
+    select:disabled {
+      background-color: var(--lmc-global-color-background-secondary, #e9ecef);
+      cursor: not-allowed; background-image: none;
     }
-
-    /* Estilo para la opción placeholder */
-    option[value=""][disabled] {
-      color: var(--lmc-global-color-muted, grey);
+    :host([invalid]) select, select:invalid {
+      border-color: var(--lmc-select-invalid-border-color, var(--lmc-global-color-danger, #dc3545));
     }
+    :host([invalid]) select:focus, select:invalid:focus {
+      box-shadow: var(--lmc-select-invalid-focus-box-shadow, 0 0 0 0.2rem color-mix(in srgb, var(--lmc-global-color-danger, red) 25%, transparent));
+    }
+    option[value=""][disabled] { color: var(--lmc-global-color-text-muted, grey); }
   `;
 
-  // --- Propiedades ---
-  @property({ type: String }) label?: string;
-  @property({ type: String }) value: string | number = '';
-  @property({ type: Array }) options: LmcSelectOption[] = []; // Array para las opciones
-  @property({ type: String }) placeholder?: string;
-  @property({ type: Boolean, reflect: true }) disabled: boolean = false;
-  @property({ type: Boolean, reflect: true }) required: boolean = false;
+  // _handleChange, _updateValidityState, checkValidity, reportValidity, updated - sin cambios
 
-  // --- State ---
-  @state() private _selectId = `lmc-select-${Math.random().toString(36).substring(2, 9)}`;
-
-  // --- Template (Render) ---
-  render() {
-    return html`
-      <div class="select-wrapper">
-        ${this.label ? html`<label for=${this._selectId}>${this.label}</label>` : nothing}
-        <select
-          id=${this._selectId}
-          .value=${live(this.value)} /* Sincroniza el valor seleccionado */
-          ?disabled=${this.disabled}
-          ?required=${this.required}
-          @change=${this._handleChange}
-          aria-label=${this.label ?? 'Select option'}
-          aria-disabled=${this.disabled ? 'true' : 'false'}
-        >
-          <!-- Opción Placeholder (si se proporciona) -->
-          ${this.placeholder
-            ? html`<option value="" disabled ?selected=${this.value === ''}>
-                  ${this.placeholder}
-                </option>`
-            : nothing}
-
-          <!-- Opciones del array -->
-          ${map(this.options, (option) => html`
-            <option
-              value=${option.value}
-              ?disabled=${option.disabled ?? false}
-            >
-              ${option.label}
-            </option>
-          `)}
-        </select>
-      </div>
-    `;
+  private _handleChange(event: Event) {
+     const selectElement = event.target as HTMLSelectElement;
+     if (this.disabled) { console.warn('[lmc-select] Change ignored: disabled.'); return; }
+     this.value = selectElement.value;
+     console.log(`[lmc-select] Value changed: ${this.value}`);
+     this.dispatchEvent(new CustomEvent('lmc-change', { detail: { value: this.value }, bubbles: true, composed: true }));
+     console.log('[lmc-select] lmc-change event dispatched.');
+     this._updateValidityState(selectElement);
   }
 
-  // --- Lógica y Eventos ---
-  private _handleChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    this.value = selectElement.value;
+  private _updateValidityState(selectElement: HTMLSelectElement | null | undefined = this.shadowRoot?.querySelector('select')) {
+      if (selectElement) {
+          this._invalid = !selectElement.checkValidity();
+          this.toggleAttribute('invalid', this._invalid);
+          console.log(`[lmc-select] Validity checked. Invalid: ${this._invalid}`);
+      } else {
+           console.warn('[lmc-select] Could not find native select element for validity check.');
+           this._invalid = false; this.toggleAttribute('invalid', false);
+      }
+  }
 
-    // Dispara el evento 'lmc-change'
-    this.dispatchEvent(new CustomEvent('lmc-change', {
-      detail: { value: this.value },
-      bubbles: true,
-      composed: true
-    }));
+  checkValidity(): boolean { this._updateValidityState(); return !this._invalid; }
+
+  reportValidity(): boolean {
+    const select = this.shadowRoot?.querySelector('select');
+    if (select) {
+      this._invalid = !select.reportValidity(); this.toggleAttribute('invalid', this._invalid);
+      return !this._invalid;
+    }
+    return true;
+  }
+
+  protected updated(changedProperties: PropertyValues<this>): void {
+      super.updated(changedProperties);
+      if (changedProperties.has('value') || changedProperties.has('required')) {
+          this._updateValidityState();
+      }
+  }
+
+  render() {
+    const ariaLabel = !this.closest('lmc-form-field') && this.label ? this.label : undefined;
+    return html`
+      <select
+        part="select"
+        name=${ifDefined(this.name)}
+        .value=${live(String(this.value ?? ''))}
+        ?disabled=${this.disabled}
+        ?required=${this.required}
+        aria-label=${ifDefined(ariaLabel)}
+        aria-invalid=${this._invalid ? 'true' : 'false'}
+        @change=${this._handleChange}
+      >
+        ${map(this.options, (option) => html`
+          <option
+            value=${option.value}
+            ?disabled=${option.disabled ?? false}
+            .selected=${String(option.value) === String(this.value)}
+          >
+            ${option.label}
+          </option>
+        `)}
+      </select>
+    `;
   }
 }
 
@@ -158,8 +141,7 @@ declare global {
   interface HTMLElementTagNameMap {
     'lmc-select': LmcSelect;
   }
-  // Exporta la interfaz para poder usarla en otros archivos si es necesario
-  export { LmcSelectOption };
 }
-// Exporta la interfaz también a nivel de módulo
-export { LmcSelectOption };
+
+// ELIMINADA la línea siguiente:
+// export { LmcSelectOption };

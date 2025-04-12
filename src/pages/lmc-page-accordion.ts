@@ -99,7 +99,7 @@ export class LmcPageAccordion extends LitElement {
 
              <lmc-accordion-item>
                  <!-- Usando el slot header-prefix y un header por defecto si no se pasa prop -->
-                 <lmc-icon slot="header-prefix" name="info"></lmc-icon>
+                 <lmc-icon slot="header-prefix" name="info">git add .</lmc-icon>
                  <span slot="header">Sección 4: Con Prefijo y Header en Slot</span>
                  <div class="item-content">
                     <p>Se puede personalizar la cabecera usando los slots <code>header-prefix</code> y <code>header-suffix</code>, o incluso reemplazar todo el header con el slot <code>header</code>.</p>

@@ -1,4 +1,4 @@
-import { LitElement, html, css, PropertyValues } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property, queryAssignedElements } from 'lit/decorators.js';
 import type { LmcAccordionItem } from './lmc-accordion-item'; // Import type for casting
 

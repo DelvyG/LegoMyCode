@@ -3,18 +3,18 @@ import { customElement } from 'lit/decorators.js';
 
 /**
  * @element lmc-footer
- * @description Contenedor para el pie de página de una web. Utiliza un slot por defecto para el contenido.
- * @version 1.1.0 - Refinado para priorizar CSS Vars y usar fallbacks globales.
+ * @description Contenedor para el pie de página. El fondo y borde superior ocupan todo el ancho, mientras que el contenido interno se centra y tiene un ancho máximo.
+ * @version 1.2.0 - Corregido layout para centrar contenido interno, no el host.
  *
  * @slot - Contenido del pie de página (texto de copyright, enlaces, iconos, etc.).
  *
- * @cssprop [--lmc-footer-background=var(--lmc-global-color-background-secondary, #f8f9fa)] - Color de fondo.
- * @cssprop [--lmc-footer-color=var(--lmc-global-color-text-muted, #6c757d)] - Color del texto.
- * @cssprop [--lmc-footer-padding=var(--lmc-global-spacing-lg, 2rem) var(--lmc-global-spacing-md, 1rem)] - Padding interno.
- * @cssprop [--lmc-footer-border-top=1px solid var(--lmc-global-color-border, #dee2e6)] - Borde superior.
- * @cssprop [--lmc-footer-text-align=center] - Alineación del texto.
- * @cssprop [--lmc-footer-max-width=var(--lmc-container-max-width, 1200px)] - Ancho máximo del contenido del footer. Usa 'none' para ancho completo.
- * @cssprop [--lmc-footer-margin-inline=auto] - Margen horizontal. 'auto' centra el contenido si max-width aplica.
+ * @cssprop [--lmc-footer-background=var(--lmc-global-color-background-secondary, #f8f9fa)] - Color de fondo (ocupa todo el ancho).
+ * @cssprop [--lmc-footer-color=var(--lmc-global-color-text-muted, #6c757d)] - Color del texto del contenido.
+ * @cssprop [--lmc-footer-padding-vertical=var(--lmc-global-spacing-lg, 2rem)] - Padding vertical del área del footer.
+ * @cssprop [--lmc-footer-padding-horizontal=var(--lmc-global-spacing-md, 1rem)] - Padding horizontal del *contenido* interno.
+ * @cssprop [--lmc-footer-border-top=1px solid var(--lmc-global-color-border, #dee2e6)] - Borde superior (ocupa todo el ancho).
+ * @cssprop [--lmc-footer-content-max-width=var(--lmc-container-max-width, 1200px)] - Ancho máximo del *contenido* interno.
+ * @cssprop [--lmc-footer-content-text-align=center] - Alineación del texto del contenido.
  * @cssprop [--lmc-footer-link-color=var(--lmc-global-color-primary, blue)] - Color de los enlaces dentro del footer.
  */
 @customElement('lmc-footer')
@@ -22,37 +22,39 @@ export class LmcFooter extends LitElement {
 
   static styles = css`
     :host {
-      display: block; /* Ocupa el ancho */
-      margin-top: auto; /* Intenta empujar el footer hacia abajo si el contenido es corto */
-      box-sizing: border-box; /* Padding no aumenta el tamaño */
-
-      /* Aplica estilos directamente al host usando variables y fallbacks globales */
+      display: block; /* Ocupa el ancho disponible */
+      margin-top: auto; /* Empuja hacia abajo en layouts flex */
+      box-sizing: border-box;
+      /* Estilos aplicados al HOST (full-width) */
       background-color: var(--lmc-footer-background, var(--lmc-global-color-background-secondary, #f8f9fa));
-      color: var(--lmc-footer-color, var(--lmc-global-color-text-muted, #6c757d));
       border-top: var(--lmc-footer-border-top, 1px solid var(--lmc-global-color-border, #dee2e6));
-      padding: var(--lmc-footer-padding, var(--lmc-global-spacing-lg, 2rem) var(--lmc-global-spacing-md, 1rem));
-      max-width: var(--lmc-footer-max-width, var(--lmc-container-max-width, 1200px)); /* Usa el mismo max-width que el container por defecto */
-      margin-inline: var(--lmc-footer-margin-inline, auto); /* Centrado por defecto si max-width aplica */
-      text-align: var(--lmc-footer-text-align, center);
-
-      font-size: 0.9em; /* Texto un poco más pequeño */
-
-      /* Transición suave para cambio de tema */
+      /* Padding vertical aplicado al host */
+      padding-top: var(--lmc-footer-padding-vertical, var(--lmc-global-spacing-lg, 2rem));
+      padding-bottom: var(--lmc-footer-padding-vertical, var(--lmc-global-spacing-lg, 2rem));
+      /* El color base del texto se define aquí para que lo herede el contenido */
+      color: var(--lmc-footer-color, var(--lmc-global-color-text-muted, #6c757d));
+      font-size: 0.9em;
       transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Asegura que si max-width es 'none', realmente ocupe todo el ancho */
-    :host([style*="--lmc-footer-max-width: none"]) {
-        max-width: none;
+    /* Contenedor INTERNO para centrar y limitar el ancho del contenido */
+    .footer-content {
+      width: 100%; /* Ocupa el ancho del host */
+      max-width: var(--lmc-footer-content-max-width, var(--lmc-container-max-width, 1200px)); /* Ancho máximo del contenido */
+      margin-left: auto;  /* Centrado */
+      margin-right: auto; /* Centrado */
+      /* Padding horizontal aplicado al contenido interno */
+      padding-left: var(--lmc-footer-padding-horizontal, var(--lmc-global-spacing-md, 1rem));
+      padding-right: var(--lmc-footer-padding-horizontal, var(--lmc-global-spacing-md, 1rem));
+      text-align: var(--lmc-footer-content-text-align, center);
+      box-sizing: border-box;
     }
 
-    /* Estilos para contenido directamente dentro del slot */
+    /* Estilos para contenido y enlaces DENTRO del slot */
     ::slotted(p) {
        margin-top: 0;
-       margin-bottom: var(--lmc-global-spacing-xs, 0.25rem); /* Menos espacio entre párrafos en footer */
+       margin-bottom: var(--lmc-global-spacing-xs, 0.25rem);
     }
-
-    /* Estilos para enlaces dentro del slot */
     ::slotted(a) {
        color: var(--lmc-footer-link-color, var(--lmc-global-color-primary, blue));
        text-decoration: none;
@@ -65,19 +67,21 @@ export class LmcFooter extends LitElement {
   `;
 
   render() {
-    // Usamos la etiqueta semántica <footer> directamente
+    // Usamos la etiqueta semántica <footer> y un div interno para el contenido
     return html`
-      <footer role="contentinfo">
-        <slot>
-           <!-- Contenido por defecto si no se proporciona slot -->
-          <p>© ${new Date().getFullYear()} LegoMyCode Project</p>
-        </slot>
+      <footer role="contentinfo" part="footer">
+        <div class="footer-content" part="content">
+          <slot>
+            <!-- Contenido por defecto si no se proporciona slot -->
+            <p>© ${new Date().getFullYear()} LegoMyCode Project. Hecho con Legos!</p>
+          </slot>
+        </div>
       </footer>
     `;
   }
 }
 
-// Declaración TypeScript para el registro global del elemento
+// Declaración TypeScript
 declare global {
   interface HTMLElementTagNameMap {
     'lmc-footer': LmcFooter;

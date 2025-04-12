@@ -29,26 +29,11 @@ export class LmcAppShell extends LitElement {
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-
-
-    lmc-navbar lmc-basic-button[slot="actions"] lmc-icon {
-    color: var(--lmc-global-color-text-default); /* Fuerza un color base visible */
-    /* O podrías intentar forzarlo al color primario si prefieres */
-    /* color: var(--lmc-global-color-primary); */
-}
-
-:host([data-theme="dark"]) lmc-navbar lmc-basic-button[slot="actions"] lmc-icon {
-   color: var(--lmc-global-color-text-default); /* Debería ser blanco o claro en tema oscuro */
-}
-
     main {
       flex-grow: 1; /* Ocupa el espacio vertical disponible */
       width: 100%;   /* Ocupa todo el ancho horizontal */
       /* El padding y max-width ahora lo gestiona el lmc-container DENTRO de cada página */
     }
-
-    /* El botón de tema ya no necesita estilo flotante, se coloca en slot="actions" de lmc-navbar */
-    /* .theme-toggle-button { ... } */
 
     lmc-navbar {
       /* Asegura que la navbar se quede fija arriba */
@@ -57,17 +42,17 @@ export class LmcAppShell extends LitElement {
       z-index: 100; /* Sobre el contenido al hacer scroll */
     }
 
-    /* Opcional: Asegurar que el botón de tema en la navbar se vea bien */
+    /* Estilos para el botón de tema en la navbar */
     lmc-navbar lmc-basic-button[slot="actions"] {
-        /* Hereda color para el icono */
+       /* Hereda color del texto de la navbar (que viene del tema) */
        color: inherit;
-        /* Puedes ajustar el padding si es necesario */
+       /* Podríamos ajustar padding si fuera necesario */
        /* --lmc-button-padding: 0.25rem; */
     }
-     lmc-navbar lmc-basic-button[slot="actions"] lmc-icon {
-          /* Asegura que el icono use el color del botón */
-         color: currentColor;
-     }
+     /* El icono dentro ya debería heredar via 'currentColor' en lmc-icon */
+     /* No necesitamos reglas específicas aquí si lmc-icon funciona bien */
+     /* lmc-navbar lmc-basic-button[slot="actions"] lmc-icon { ... } */
+     /* :host([data-theme="dark"]) lmc-navbar lmc-basic-button[slot="actions"] lmc-icon { ... } */
   `;
 
   connectedCallback() {
@@ -85,12 +70,10 @@ export class LmcAppShell extends LitElement {
 
     if (outlet) {
       const router = new Router(outlet);
-      // Aseguramos el tipo Route[] para el array
       const routes: Route[] = [
-        // Ruta para la página principal (Home)
+        // --- RUTA HOME ---
         {
           path: '/',
-          // Usamos function() para tipar 'this' si fuera necesario, aunque no lo usamos aquí
           action: async (context: RouteContext, commands: Commands) => {
             const routePath = context.pathname;
             console.log(`[Router] Action started for ${routePath}`);
@@ -100,18 +83,27 @@ export class LmcAppShell extends LitElement {
               return commands.component('lmc-page-home');
             } catch (error) {
               console.error(`[Router] Error loading module for ${routePath}:`, error);
-              try {
-                await import('./pages/lmc-page-not-found.ts');
-                return commands.component('lmc-page-not-found');
-              } catch (notFoundError) {
-                 console.error(`[Router] CRITICAL: Error loading NOT FOUND module after failing ${routePath}:`, notFoundError);
-                 outlet.innerHTML = '<h1>Error Crítico</h1><p>No se pudo cargar el contenido solicitado ni la página de error.</p>';
-                 return commands.prevent();
-              }
+              return this._handleRouteError(outlet, commands, routePath, error);
             }
           },
         },
-        // Ruta para Accordion
+        // --- RUTA ABOUT ---
+        {
+          path: '/about',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-about.ts');
+              console.log(`[Router] Module ./pages/lmc-page-about.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-about');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+        // --- RUTA ACCORDION ---
         {
           path: '/accordion',
           action: async (context: RouteContext, commands: Commands) => {
@@ -123,18 +115,43 @@ export class LmcAppShell extends LitElement {
               return commands.component('lmc-page-accordion');
             } catch (error) {
               console.error(`[Router] Error loading module for ${routePath}:`, error);
-              try {
-                await import('./pages/lmc-page-not-found.ts');
-                return commands.component('lmc-page-not-found');
-              } catch (notFoundError) {
-                 console.error(`[Router] CRITICAL: Error loading NOT FOUND module after failing ${routePath}:`, notFoundError);
-                 outlet.innerHTML = '<h1>Error Crítico</h1><p>No se pudo cargar el contenido solicitado ni la página de error.</p>';
-                 return commands.prevent();
-              }
+               return this._handleRouteError(outlet, commands, routePath, error);
             }
           },
         },
-        // Ruta Catch-all
+        // --- RUTA BUTTONS ---
+        {
+          path: '/buttons',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-buttons.ts');
+              console.log(`[Router] Module ./pages/lmc-page-buttons.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-buttons');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+               return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+        // --- RUTA FORMS ---
+        {
+          path: '/forms',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-forms.ts');
+              console.log(`[Router] Module ./pages/lmc-page-forms.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-forms');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+        // --- RUTA CATCH-ALL ---
         {
           path: '(.*)',
            action: async (context: RouteContext, commands: Commands) => {
@@ -146,6 +163,7 @@ export class LmcAppShell extends LitElement {
                return commands.component('lmc-page-not-found');
             } catch (error) {
               console.error(`[Router] Error loading module for ${routePath}:`, error);
+              // Fallback final si ni 404 carga
               outlet.innerHTML = '<h1>Error Crítico</h1><p>No se pudo cargar la página solicitada ni la página de error.</p>';
               return commands.prevent();
             }
@@ -158,6 +176,19 @@ export class LmcAppShell extends LitElement {
       console.error('[Router] CRITICAL: Router outlet element <main> not found in lmc-app-shell shadow DOM!');
     }
   }
+
+  // Helper para manejar errores de carga de ruta y mostrar 404
+  private async _handleRouteError(outlet: HTMLElement, commands: Commands, failedPath: string, error: unknown) {
+      try {
+        await import('./pages/lmc-page-not-found.ts');
+        return commands.component('lmc-page-not-found');
+      } catch (notFoundError) {
+         console.error(`[Router] CRITICAL: Error loading NOT FOUND module after failing ${failedPath}:`, notFoundError, 'Original error:', error);
+         outlet.innerHTML = '<h1>Error Crítico</h1><p>No se pudo cargar el contenido solicitado ni la página de error.</p>';
+         return commands.prevent();
+      }
+  }
+
 
   private _toggleTheme() {
     this._isDarkMode = !this._isDarkMode;
@@ -172,29 +203,30 @@ export class LmcAppShell extends LitElement {
   render() {
     return html`
       <lmc-navbar>
-        <!-- Logo en el slot 'brand' -->
+        <!-- Logo -->
         <div slot="brand">
-          <!-- Asumiendo que la carpeta img está en /public -->
-          <!-- Puedes envolverlo en un link a Home -->
-           <a href="/" style="line-height: 0;"> <!-- line-height 0 para evitar espacio extra bajo la img -->
+           <a href="/" style="line-height: 0;">
                <img src="/img/LegoMyCodeLogo-main.png" alt="LegoMyCode Logo" style="height: 40px; vertical-align: middle;" />
            </a>
         </div>
 
-        <!-- Links de Navegación en el slot por defecto -->
+        <!-- Links -->
         <lmc-nav-link href="/">Home</lmc-nav-link>
+        <lmc-nav-link href="/about">About</lmc-nav-link>
         <lmc-nav-link href="/accordion">Accordion</lmc-nav-link>
+        <lmc-nav-link href="/buttons">Buttons</lmc-nav-link>
+        <lmc-nav-link href="/forms">Forms</lmc-nav-link>
         <!-- Más links irán aquí -->
 
-        <!-- Botón de cambio de tema en el slot 'actions' -->
+        <!-- Actions -->
         <div slot="actions">
             <lmc-basic-button
                 class="theme-toggle-button"
-                appearance="primary" /* Cambiado a un valor permitido */
+                appearance="ghost" /* Mejor apariencia para navbar */
                 @lmc-click=${this._toggleTheme}
                 title=${this._isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
             >
-            <lmc-icon slot="prefix" name=${this._isDarkMode ? 'light_mode' : 'dark_mode'}></lmc-icon>
+                <lmc-icon slot="prefix" name=${this._isDarkMode ? 'light_mode' : 'dark_mode'}></lmc-icon>
             </lmc-basic-button>
         </div>
       </lmc-navbar>

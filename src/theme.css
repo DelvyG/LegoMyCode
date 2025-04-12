@@ -1,100 +1,126 @@
 /* src/theme.css */
 
-/* :root define variables disponibles globalmente */
+/* --- Tema Claro (Por Defecto) --- */
 :root {
-    /* Paleta de Colores Base (Tema Claro por defecto) */
-    --lmc-global-color-primary: #0d6efd; /* Azul Bootstrap */
-    --lmc-global-color-secondary: #6c757d; /* Gris Bootstrap */
-    --lmc-global-color-success: #198754;  /* Verde Bootstrap */
-    --lmc-global-color-danger: #dc3545;   /* Rojo Bootstrap */
-    --lmc-global-color-warning: #ffc107;  /* Amarillo Bootstrap */
-    --lmc-global-color-info: #0dcaf0;     /* Cyan Bootstrap */
-    --lmc-global-color-light: #f8f9fa;    /* Gris muy claro */
-    --lmc-global-color-dark: #212529;     /* Negro suave */
-    --lmc-global-color-white: #ffffff;
-    --lmc-global-color-black: #000000;
-  
-    --lmc-global-color-background: var(--lmc-global-color-white); /* Fondo principal */
-    --lmc-global-color-text: var(--lmc-global-color-dark);      /* Color de texto principal */
-    --lmc-global-color-border: #dee2e6;                         /* Color de borde sutil */
-    --lmc-global-color-muted: var(--lmc-global-color-secondary);  /* Texto atenuado */
-    --lmc-global-color-accent: #6f42c1; /* Púrpura (Ejemplo para acentos) */
-  
-    /* Tipografía */
-    --lmc-global-font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --lmc-global-font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --lmc-global-font-size-base: 1rem;      /* 16px por defecto */
-    --lmc-global-font-weight-base: 400;
-    --lmc-global-line-height-base: 1.5;
-    --lmc-global-font-size-sm: calc(var(--lmc-global-font-size-base) * 0.875); /* 14px */
-    --lmc-global-font-size-lg: calc(var(--lmc-global-font-size-base) * 1.25);  /* 20px */
-    --lmc-global-font-weight-bold: 700;
-  
-    /* Espaciado (Basado en 1rem = 16px) */
-    --lmc-global-spacing-base: 1rem;
-    --lmc-global-spacing-xs: calc(var(--lmc-global-spacing-base) * 0.25); /* 4px */
-    --lmc-global-spacing-sm: calc(var(--lmc-global-spacing-base) * 0.5);  /* 8px */
-    --lmc-global-spacing-md: var(--lmc-global-spacing-base);             /* 16px */
-    --lmc-global-spacing-lg: calc(var(--lmc-global-spacing-base) * 1.5);  /* 24px */
-    --lmc-global-spacing-xl: calc(var(--lmc-global-spacing-base) * 3);    /* 48px */
-  
-    /* Bordes */
-    --lmc-global-border-width: 1px;
-    --lmc-global-border-radius-base: 0.375rem; /* Bootstrap's default */
-    --lmc-global-border-radius-sm: 0.25rem;
-    --lmc-global-border-radius-lg: 0.5rem;
-    --lmc-global-border-radius-pill: 50rem;
-  
-    /* Sombras (Ejemplos) */
-    --lmc-global-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
-    --lmc-global-shadow-base: 0 .5rem 1rem rgba(0, 0, 0, .15);
-    --lmc-global-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
-  
-    /* Z-indexes (Ejemplos) */
-    --lmc-global-zindex-dropdown: 1000;
-    --lmc-global-zindex-sticky: 1020;
-    --lmc-global-zindex-modal-backdrop: 1040;
-    --lmc-global-zindex-modal: 1050;
-    --lmc-global-zindex-popover: 1060;
-    --lmc-global-zindex-tooltip: 1070;
-    --lmc-global-zindex-snackbar: 1090; /* Snackbar encima de casi todo */
-  }
-  
-  /* Estilos globales básicos aplicados al body */
-  body {
-    margin: 0;
-    font-family: var(--lmc-global-font-family-base);
-    font-size: var(--lmc-global-font-size-base);
-    font-weight: var(--lmc-global-font-weight-base);
-    line-height: var(--lmc-global-line-height-base);
-    color: var(--lmc-global-color-text);
-    background-color: var(--lmc-global-color-background);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Podemos añadir un tema oscuro opcional */
-  [data-theme="dark"] {
-    --lmc-global-color-primary: #6ea8fe; /* Azul más claro para contraste */
-    --lmc-global-color-secondary: #adb5bd;
-    --lmc-global-color-success: #3dd5f3;
-    --lmc-global-color-danger: #f77281;
-    --lmc-global-color-warning: #ffe08a;
-    --lmc-global-color-info: #6edff6;
-    --lmc-global-color-light: #343a40;
-    --lmc-global-color-dark: #dee2e6;
-  
-    --lmc-global-color-background: #212529; /* Fondo oscuro */
-    --lmc-global-color-text: var(--lmc-global-color-light); /* Texto claro */
-    --lmc-global-color-border: #495057; /* Borde más oscuro */
-    --lmc-global-color-muted: var(--lmc-global-color-secondary);
-    --lmc-global-color-accent: #9b77d7;
-  
-    /* Ajustar sombras para tema oscuro si es necesario */
-    --lmc-global-shadow-base: 0 .5rem 1rem rgba(0, 0, 0, .5);
-  }
-  
-  /* Regla básica de box-sizing */
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
+  /* Colores Base */
+  --lmc-global-color-background: #ffffff;
+  --lmc-global-color-background-secondary: #f8f9fa; /* Más claro, para fondos sutiles */
+  --lmc-global-color-background-tertiary: #e9ecef;  /* Aún más claro, para hovers, etc. */
+  --lmc-global-color-text-default: #212529;       /* Texto principal oscuro */
+  --lmc-global-color-text-muted: #6c757d;        /* Texto secundario/grisáceo */
+  --lmc-global-color-border: #dee2e6;             /* Borde estándar */
+
+  /* Colores Semánticos (Bootstrap-like) */
+  --lmc-global-color-primary: #0d6efd;         /* Azul primario */
+  --lmc-global-color-secondary: #6c757d;        /* Gris secundario */
+  --lmc-global-color-success: #198754;         /* Verde éxito */
+  --lmc-global-color-danger: #dc3545;          /* Rojo peligro */
+  --lmc-global-color-warning: #ffc107;         /* Amarillo advertencia */
+  --lmc-global-color-info: #0dcaf0;            /* Azul info */
+  --lmc-global-color-light: #f8f9fa;           /* Claro (coincide con secundario) */
+  --lmc-global-color-dark: #212529;            /* Oscuro (coincide con texto) */
+
+  /* Colores de Texto sobre Fondos Semánticos */
+  --lmc-global-color-text-on-primary: #ffffff;
+  --lmc-global-color-text-on-secondary: #ffffff;
+  --lmc-global-color-text-on-success: #ffffff;
+  --lmc-global-color-text-on-danger: #ffffff;
+  --lmc-global-color-text-on-warning: #000000; /* Texto oscuro sobre amarillo */
+  --lmc-global-color-text-on-info: #000000;    /* Texto oscuro sobre cyan claro */
+  --lmc-global-color-text-on-light: #000000;
+  --lmc-global-color-text-on-dark: #ffffff;
+
+  /* Tipografía */
+  --lmc-global-font-family-base: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --lmc-global-font-size-base: 1rem;      /* 16px por defecto */
+  --lmc-global-font-weight-base: 400;
+  --lmc-global-line-height-base: 1.5;
+
+  /* Espaciado (Ejemplos) */
+  --lmc-global-spacing-xs: 0.25rem; /* 4px */
+  --lmc-global-spacing-sm: 0.5rem;  /* 8px */
+  --lmc-global-spacing-md: 1rem;    /* 16px */
+  --lmc-global-spacing-lg: 1.5rem;  /* 24px */
+  --lmc-global-spacing-xl: 2.5rem;  /* 40px */
+
+  /* Bordes */
+  --lmc-global-border-radius-sm: 0.25rem; /* 4px */
+  --lmc-global-border-radius-md: 0.375rem; /* 6px */
+  --lmc-global-border-radius-lg: 0.5rem;  /* 8px */
+  --lmc-global-border-width: 1px;
+
+  /* Sombras (Ejemplo) */
+   --lmc-global-box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .075);
+   --lmc-global-box-shadow-md: 0 .5rem 1rem rgba(0, 0, 0, .15);
+   --lmc-global-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .175);
+
+   /* Otros */
+   --lmc-global-link-color: var(--lmc-global-color-primary);
+   --lmc-global-link-hover-color: color-mix(in srgb, var(--lmc-global-color-primary) 80%, black);
+}
+
+/* --- Tema Oscuro --- */
+[data-theme="dark"] {
+  /* Colores Base */
+  --lmc-global-color-background: #212529; /* Fondo oscuro */
+  --lmc-global-color-background-secondary: #343a40; /* Un poco más claro */
+  --lmc-global-color-background-tertiary: #495057; /* Aún más claro */
+  --lmc-global-color-text-default: #f8f9fa;       /* Texto principal claro */
+  --lmc-global-color-text-muted: #adb5bd;        /* Texto secundario/grisáceo claro */
+  --lmc-global-color-border: #495057;             /* Borde más oscuro */
+
+  /* Colores Semánticos (Ajustados para Dark Mode) */
+  /* Podríamos mantener algunos o aclararlos/oscurecerlos según contraste */
+  --lmc-global-color-primary: #3b82f6;         /* Azul un poco más brillante */
+  --lmc-global-color-secondary: #6c757d;        /* Mantenemos gris */
+  --lmc-global-color-success: #22c55e;         /* Verde más brillante */
+  --lmc-global-color-danger: #ef4444;          /* Rojo más brillante */
+  --lmc-global-color-warning: #f59e0b;         /* Naranja/ambar */
+  --lmc-global-color-info: #38bdf8;            /* Cyan más brillante */
+  --lmc-global-color-light: #f8f9fa;           /* Color claro (para contraste inverso) */
+  --lmc-global-color-dark: #dee2e6;            /* Color oscuro (texto claro sobre esto) */
+
+  /* Colores de Texto sobre Fondos Semánticos (Ajustar si es necesario) */
+  --lmc-global-color-text-on-primary: #ffffff;
+  --lmc-global-color-text-on-secondary: #ffffff;
+  --lmc-global-color-text-on-success: #ffffff;
+  --lmc-global-color-text-on-danger: #ffffff;
+  --lmc-global-color-text-on-warning: #000000; /* Mantener texto oscuro sobre amarillo */
+  --lmc-global-color-text-on-info: #000000;
+  --lmc-global-color-text-on-light: #000000;
+  --lmc-global-color-text-on-dark: #000000; /* Texto oscuro sobre fondo "dark" del tema oscuro (que es claro) */
+
+  /* Links */
+  --lmc-global-link-color: var(--lmc-global-color-info); /* Usar color info para links en modo oscuro? */
+  --lmc-global-link-hover-color: color-mix(in srgb, var(--lmc-global-color-info) 80%, white);
+
+  /* Sombras (Podrían necesitar ajuste para ser visibles) */
+   --lmc-global-box-shadow-sm: 0 .125rem .25rem rgba(0, 0, 0, .2);
+   --lmc-global-box-shadow-md: 0 .5rem 1rem rgba(0, 0, 0, .3);
+   --lmc-global-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, .4);
+}
+
+/* Estilos globales adicionales (opcional) */
+body {
+  font-family: var(--lmc-global-font-family-base);
+  font-size: var(--lmc-global-font-size-base);
+  font-weight: var(--lmc-global-font-weight-base);
+  line-height: var(--lmc-global-line-height-base);
+  color: var(--lmc-global-color-text-default);
+  background-color: var(--lmc-global-color-background);
+  margin: 0;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave en body */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--lmc-global-color-text-default); /* Asegurar que los títulos hereden color */
+}
+
+a {
+    color: var(--lmc-global-link-color);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--lmc-global-link-hover-color);
+    text-decoration: underline;
+}
