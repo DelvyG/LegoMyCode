@@ -152,6 +152,30 @@ export class LmcAppShell extends LitElement {
           },
         },
         // --- RUTA CATCH-ALL ---
+
+
+ // --- RUTA FEEDBACK ---
+ {
+  path: '/feedback',
+  action: async (context: RouteContext, commands: Commands) => {
+    const routePath = context.pathname;
+    console.log(`[Router] Action started for ${routePath}`);
+    try {
+      await import('./pages/lmc-page-feedback.ts');
+      console.log(`[Router] Module ./pages/lmc-page-feedback.ts loaded successfully for ${routePath}`);
+      return commands.component('lmc-page-feedback');
+    } catch (error) {
+      console.error(`[Router] Error loading module for ${routePath}:`, error);
+      return this._handleRouteError(outlet, commands, routePath, error);
+    }
+  },
+},
+// --------------------
+
+
+
+
+
         {
           path: '(.*)',
            action: async (context: RouteContext, commands: Commands) => {
@@ -216,6 +240,7 @@ export class LmcAppShell extends LitElement {
         <lmc-nav-link href="/accordion">Accordion</lmc-nav-link>
         <lmc-nav-link href="/buttons">Buttons</lmc-nav-link>
         <lmc-nav-link href="/forms">Forms</lmc-nav-link>
+        <lmc-nav-link href="/feedback">Feedback</lmc-nav-link>
         <!-- Más links irán aquí -->
 
         <!-- Actions -->
