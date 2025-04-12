@@ -55,17 +55,25 @@ _(Para más detalles, consulta la documentación interna del proyecto)_
 LegoMyCode/
 
 ```text
-├── public/         # Archivos estáticos (ej: imágenes)
+LegoMyCode/
+├── public/
+│ └── img/ # Favicon, logo, y otras imágenes públicas servidas directamente
 ├── src/
-│   ├── blocks/     # ¡Aquí viven los bloques LegoMyCode! (lmc-*.ts)
-│   ├── assets/     # Assets específicos del código fuente
-│   ├── my-element.ts # Componente principal de demostración/página
-│   └── vite-env.d.ts # Tipos de Vite
-├── .gitignore      # Archivos ignorados por Git
-├── index.html      # Punto de entrada HTML para Vite
-├── package.json    # Dependencias y scripts del proyecto
-├── tsconfig.json   # Configuración de TypeScript
-└── README.md       # ¡Este archivo!
+│ ├── assets/ # Assets específicos del código fuente (ej: SVGs internos si los hubiera)
+│ ├── blocks/ # ¡CORAZÓN DEL PROYECTO! Aquí viven los Bloques LMC (lmc-.ts)
+│ ├── pages/ # Componentes que representan páginas completas para la demo (lmc-page-.ts)
+│ ├── utils/ # Funciones de utilidad reutilizables (ej: uuid.ts)
+│ ├── lmc-app-shell.ts # El componente "Shell" principal de la aplicación demo (Navbar, Footer, Router Outlet)
+│ ├── my-element.ts # Punto de entrada JS inicial que ahora carga <lmc-app-shell>. YA NO contiene la demo principal.
+│ ├── theme.css # Variables CSS globales (--lmc-global-*) y estilos de tema (claro/oscuro)
+│ ├── index.css # Estilos globales base de Vite (si se usan)
+│ └── vite-env.d.ts # Tipos de entorno de Vite
+├── .gitignore # Archivos y carpetas ignorados por Git
+├── index.html # Punto de entrada HTML principal para Vite (carga my-element.ts)
+├── package.json # Dependencias y scripts del proyecto (npm)
+├── package-lock.json # Lockfile de dependencias
+├── tsconfig.json # Configuración del compilador TypeScript
+└── README.md # Esta documentación principal
 
 ```
 
