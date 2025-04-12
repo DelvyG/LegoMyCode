@@ -1,5 +1,6 @@
-import { LitElement, html, css, PropertyValues } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 
 /**
  * @element lmc-alert
@@ -16,6 +17,8 @@ import { customElement, property } from 'lit/decorators.js';
  *
  * @cssprop --lmc-alert-danger-background-color - Color de fondo para tipo "danger".
  * @cssprop --lmc-alert-danger-text-color - Color de texto para tipo "danger".
+ *
+ * @fires lmc-close - Disparado cuando el usuario cierra la alerta.
  */
 @customElement('lmc-alert')
 export class LmcAlert extends LitElement {
@@ -33,9 +36,17 @@ export class LmcAlert extends LitElement {
   @property({ type: String })
   type: 'info' | 'success' | 'warning' | 'danger' = 'info';
 
+   /**
+   * Indica si la alerta puede ser cerrada por el usuario.
+   */
+  @property({ type: Boolean, reflect: true })
+  closable = false;
+
   static styles = css`
     :host {
-      display: block;
+      display: flex; /* Use flexbox for alignment */
+      align-items: center;
+      justify-content: space-between; /* Push close button to the right */
       padding: 1rem;
       border-radius: 0.5rem;
       font-family: sans-serif;
@@ -62,9 +73,36 @@ export class LmcAlert extends LitElement {
       background-color: var(--lmc-alert-danger-background-color, #f8d7da);
       color: var(--lmc-alert-danger-text-color, #721c24);
     }
+
+    /* Estilos para el botón de cerrar */
+    .close-button {
+      background: none;
+      border: none;
+      color: inherit; /* Inherit text color from the alert */
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 0;
+      margin-left: 1rem; /* Space between message and button */
+    }
+    .close-button:hover {
+      opacity: 0.8;
+    }
+
+    /* Hide close button when not closable */
+    :host(:not([closable])) .close-button {
+      display: none;
+    }
   `;
 
+  private _handleClose() {
+    this.dispatchEvent(new CustomEvent('lmc-close', { bubbles: true, composed: true }));
+  }
+
+
   render() {
-    return html`${this.message}`;
+    return html`
+      <span>${unsafeHTML(this.message)}</span>
+      ${this.closable ? html`<button class="close-button" @click=${this._handleClose}>×</button>` : ''}
+    `;
   }
 }

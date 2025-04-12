@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 
 // Importar bloques necesarios para la demo
 import '../blocks/lmc-container';
@@ -22,6 +23,14 @@ export class LmcPageFeedback extends LitElement {
   @state() private _isModalOpen = false;
   @state() private _isSnackbarOpen = false;
   @state() private _snackbarMessage = '';
+
+  // Estado para las alertas (array de datos)
+  @state() private _alerts: { type: 'info' | 'success' | 'warning' | 'danger'; message: string; id: number }[] = [
+    { type: 'info', message: 'Esto es una información general.', id: 1 },
+    { type: 'success', message: '¡Operación completada con éxito!', id: 2 },
+    { type: 'warning', message: 'Advertencia: Algo podría necesitar atención.', id: 3 },
+    { type: 'danger', message: 'Error: No se pudo completar la acción.', id: 4 },
+  ];
 
   static styles = css`
     /* Estilos generales de la página */
@@ -59,6 +68,15 @@ export class LmcPageFeedback extends LitElement {
   // El snackbar se cierra solo por duración o si el usuario lo cierra (evento lmc-close)
   private _handleSnackbarClose() { this._isSnackbarOpen = false; }
 
+  // --- Handler para cerrar alertas
+  private _handleAlertClose(event: CustomEvent) {
+    // Obtener el ID de la alerta que se cerró (desde el atributo 'data-id' o similar)
+    const alertId = Number((event.target as HTMLElement).dataset.id);
+
+    // Filtrar el array de alertas para eliminar la que se cerró
+    this._alerts = this._alerts.filter(alert => alert.id !== alertId);
+  }
+
 
   render() {
     return html`
@@ -76,10 +94,15 @@ export class LmcPageFeedback extends LitElement {
             y opcionalmente cerrables (<code>closable</code>).
           </lmc-text-display>
           <div class="alert-showcase">
-            <lmc-alert type="info">Esto es una información general.</lmc-alert>
-            <lmc-alert type="success">¡Operación completada con éxito!</lmc-alert>
-            <lmc-alert type="warning" closable>Advertencia: Algo podría necesitar atención.</lmc-alert>
-            <lmc-alert type="danger" closable>Error: No se pudo completar la acción.</lmc-alert>
+            ${this._alerts.map(alert => html`
+              <lmc-alert
+                type=${alert.type}
+                message=${alert.message}
+                closable
+                data-id=${alert.id}
+                @lmc-close=${this._handleAlertClose}
+              ></lmc-alert>
+            `)}
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, state, query } from 'lit/decorators.js';
 // Importa Router y los tipos correctos directamente
 import { Router } from '@vaadin/router';
 // Nota: Usamos RouteContext, Commands, y Route de @vaadin/router
@@ -15,9 +15,19 @@ import './blocks/lmc-icon';
 import './blocks/lmc-container';
 import './theme.css'; // Importamos el tema global
 
+import './pages/lmc-page-layout';
+import './pages/lmc-page-staggered-list';
+import './pages/lmc-page-pagination';
+
+
 @customElement('lmc-app-shell')
 export class LmcAppShell extends LitElement {
   @state() private _isDarkMode = false;
+
+  // Query para el router outlet
+  @query('#router-outlet')
+  routerOutlet!: HTMLElement;
+
 
   static styles = css`
     :host {
@@ -60,10 +70,14 @@ export class LmcAppShell extends LitElement {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     this._isDarkMode = localStorage.getItem('lmc-theme') === 'dark' || (!localStorage.getItem('lmc-theme') && prefersDark);
     this._applyTheme();
-    requestAnimationFrame(() => this._initRouter());
   }
 
-  private _initRouter() {
+  firstUpdated() {
+    this._initRouter();
+  }
+
+
+  private async _initRouter() {
     console.log('[Router] Attempting to initialize router...'); // LOG 1
     const outlet = this.shadowRoot?.querySelector('main');
     console.log('[Router] Outlet element found:', outlet); // LOG 2
@@ -87,7 +101,46 @@ export class LmcAppShell extends LitElement {
             }
           },
         },
+        
+
+        {
+          path: '/pagination',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-pagination.ts');
+              console.log(`[Router] Module ./pages/lmc-page-pagination.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-pagination');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+
+
+
+
+        {
+          path: '/staggered',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-staggered-list.ts');
+              console.log(`[Router] Module ./pages/lmc-page-staggered-list.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-staggered-list');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+
+        
         // --- RUTA ABOUT ---
+
         {
           path: '/about',
           action: async (context: RouteContext, commands: Commands) => {
@@ -151,47 +204,78 @@ export class LmcAppShell extends LitElement {
             }
           },
         },
+        // --- RUTA FEEDBACK ---
+        {
+          path: '/feedback',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-feedback.ts');
+              console.log(`[Router] Module ./pages/lmc-page-feedback.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-feedback');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+        // --- RUTA TABS ---
+        {
+          path: '/tabs',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-tabs.ts');
+              console.log(`[Router] Module ./pages/lmc-page-tabs.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-tabs');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+        // --- RUTA LAYOUT ---
+        {
+          path: '/layout',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-layout.ts');
+              console.log(`[Router] Module ./pages/lmc-page-layout.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-layout');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+
+
+
+        {
+          path: '/tooltip',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-tooltip.ts');
+              console.log(`[Router] Module ./pages/lmc-page-tooltip.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-tooltip');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+
+
+
+
+
         // --- RUTA CATCH-ALL ---
-
-
- // --- RUTA FEEDBACK ---
- {
-  path: '/feedback',
-  action: async (context: RouteContext, commands: Commands) => {
-    const routePath = context.pathname;
-    console.log(`[Router] Action started for ${routePath}`);
-    try {
-      await import('./pages/lmc-page-feedback.ts');
-      console.log(`[Router] Module ./pages/lmc-page-feedback.ts loaded successfully for ${routePath}`);
-      return commands.component('lmc-page-feedback');
-    } catch (error) {
-      console.error(`[Router] Error loading module for ${routePath}:`, error);
-      return this._handleRouteError(outlet, commands, routePath, error);
-    }
-  },
-},
-// --------------------
-
- // --- RUTA TABS ---
- {
-  path: '/tabs',
-  action: async (context: RouteContext, commands: Commands) => {
-    const routePath = context.pathname;
-    console.log(`[Router] Action started for ${routePath}`);
-    try {
-      await import('./pages/lmc-page-tabs.ts');
-      console.log(`[Router] Module ./pages/lmc-page-tabs.ts loaded successfully for ${routePath}`);
-      return commands.component('lmc-page-tabs');
-    } catch (error) {
-      console.error(`[Router] Error loading module for ${routePath}:`, error);
-      return this._handleRouteError(outlet, commands, routePath, error);
-    }
-  },
-},
-// ---------------
-
-
-
         {
           path: '(.*)',
            action: async (context: RouteContext, commands: Commands) => {
@@ -258,6 +342,16 @@ export class LmcAppShell extends LitElement {
         <lmc-nav-link href="/forms">Forms</lmc-nav-link>
         <lmc-nav-link href="/feedback">Feedback</lmc-nav-link>
         <lmc-nav-link href="/tabs">Tabs</lmc-nav-link>
+        <lmc-nav-link href="/layout">Layout</lmc-nav-link>
+        <lmc-nav-link href="/tooltip">Tooltip</lmc-nav-link>
+        <lmc-nav-link href="/staggered">Staggered</lmc-nav-link>
+        <lmc-nav-link href="/pagination">Paginación</lmc-nav-link>
+
+    
+
+    
+
+    
         <!-- Más links irán aquí -->
 
         <!-- Actions -->
