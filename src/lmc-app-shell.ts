@@ -272,6 +272,23 @@ export class LmcAppShell extends LitElement {
         },
 
 
+        {
+          path: '/badge',
+          action: async (context: RouteContext, commands: Commands) => {
+            const routePath = context.pathname;
+            console.log(`[Router] Action started for ${routePath}`);
+            try {
+              await import('./pages/lmc-page-badge.ts');
+              console.log(`[Router] Module ./pages/lmc-page-badge.ts loaded successfully for ${routePath}`);
+              return commands.component('lmc-page-badge');
+            } catch (error) {
+              console.error(`[Router] Error loading module for ${routePath}:`, error);
+              return this._handleRouteError(outlet, commands, routePath, error);
+            }
+          },
+        },
+
+
 
 
 
@@ -346,6 +363,9 @@ export class LmcAppShell extends LitElement {
         <lmc-nav-link href="/tooltip">Tooltip</lmc-nav-link>
         <lmc-nav-link href="/staggered">Staggered</lmc-nav-link>
         <lmc-nav-link href="/pagination">Paginación</lmc-nav-link>
+        <lmc-nav-link href="/badge">Badge</lmc-nav-link>
+
+    
 
     
 
@@ -364,6 +384,12 @@ export class LmcAppShell extends LitElement {
             >
                 <lmc-icon slot="prefix" name=${this._isDarkMode ? 'light_mode' : 'dark_mode'}></lmc-icon>
             </lmc-basic-button>
+
+
+       
+
+
+
         </div>
       </lmc-navbar>
 

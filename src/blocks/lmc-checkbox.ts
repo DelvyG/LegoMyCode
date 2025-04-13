@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
+import { nothing } from 'lit';
 
 /**
  * @description Un componente checkbox reutilizable con etiqueta.
