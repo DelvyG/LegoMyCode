@@ -1,25 +1,24 @@
+import { defineConfig } from 'vite'
+import { resolve } from 'path'
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// https://vitejs.dev/config/
 export default defineConfig({
-  // Otras configuraciones...
-  build: {
-    assetsDir: 'assets',
-    emptyOutDir: true,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
-  },
-  // Si estás usando un subpath para tu despliegue:
-  base: '/',
-})
-
-function defineConfig(arg0: {
-  // Otras configuraciones...
-  build: { assetsDir: string; emptyOutDir: boolean; rollupOptions: { output: { manualChunks: undefined; }; }; };
-  // Si estás usando un subpath para tu despliegue:
-  base: string;
-}) {
-  throw new Error("Function not implemented.");
+base: '/', // Al no tener subdominio debes agregarlo
+build: {
+rollupOptions: {
+input: {
+main: resolve(__dirname, 'index.html')
 }
-
-
+},
+outDir: 'dist',
+emptyOutDir: true, //Limpiar la carpeta cada vez
+},
+publicDir: 'public',
+})

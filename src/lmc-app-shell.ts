@@ -365,12 +365,7 @@ export class LmcAppShell extends LitElement {
         <lmc-nav-link href="/pagination">Paginación</lmc-nav-link>
         <lmc-nav-link href="/badge">Badge</lmc-nav-link>
 
-    
-
-    
-
-    
-
+         
     
         <!-- Más links irán aquí -->
 
