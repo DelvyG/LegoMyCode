@@ -1,42 +1,38 @@
       
 <!doctype html>
-<html lang="es">
+<html lang="es"> <!-- Cambiado a 'es' (español), puedes ajustarlo si prefieres 'en' -->
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <!-- Asegúrate de que la ruta al favicon sea correcta, podría ser /favicon.ico o similar -->
+       <link rel="icon" type="image/png" href="/img/favicon.png" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LegoMyCode Project</title>
+    <title>LegoMyCode Project</title> <!-- Título actualizado -->
+
+    <!-- Enlace a CSS global si lo usas (ajusta la ruta si es diferente) -->
     <link rel="stylesheet" href="/src/index.css" />
+
+    
+    <!-- **IMPORTANTE**: Mantenemos el enlace para Material Symbols si usas lmc-icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
   </head>
   <body>
+    <!--
+      Este es el contenedor principal donde nuestra aplicación (lmc-app-shell)
+      será inyectada por el script my-element.ts.
+      ¡YA NO PONEMOS <my-element> AQUÍ DIRECTAMENTE!
+    -->
     <div id="app"></div>
 
-    <script type="module">
-      // Importamos lmc-app-shell directamente aquí
-      import './src/lmc-app-shell.ts';
-
-      // Creamos una instancia de nuestro componente raíz
-      const appShellInstance = document.createElement('lmc-app-shell');
-
-      // Buscamos el contenedor #app
-      const appContainer = document.getElementById('app');
-      if (appContainer) {
-        appContainer.innerHTML = ''; // Limpia el contenedor
-        appContainer.appendChild(appShellInstance);
-      } else {
-        console.warn('No element with id="app" found. Appending lmc-app-shell directly to body.');
-        // Primero, busca y elimina cualquier instancia de <my-element>
-        const oldElement = document.querySelector('my-element');
-        if (oldElement) {
-          oldElement.remove();
-        }
-        document.body.appendChild(appShellInstance);
-      }
-
-      console.log("LegoMyCode App Shell Bootstrapped via index.html");
-    </script>
+    <!--
+      Este script sigue siendo el punto de entrada.
+      Carga /src/my-element.ts, el cual ahora se encarga
+      de importar lmc-app-shell y añadirlo al div#app de arriba.
+    -->
+     <script type="module" src="/src/my-element.ts"></script> 
   </body>
 </html>
 
+    
     
