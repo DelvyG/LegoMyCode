@@ -1,39 +1,21 @@
-      
 <!DOCTYPE html>
 <html>
 <head>
-
-          
-        <title>My LegoMyCode Test Page</title>
-        <script src="https://legomycode.pages.dev/assets/main-TYaH_DXW.js"></script>
-        <style>
-          /* Estilos básicos para la página */
-          body {
-            font-family: sans-serif;
-            margin: 20px;
-          }
-        </style>
-     
-      
-          
-
-
-  <title>My LegoMyCode Test Page</title>
-  <style>
-    /* Estilos básicos para la página */
-    body {
-      font-family: sans-serif;
-      margin: 20px;
-    }
-  </style>
+    <title>Consumiendo Bloques desde Cloudflare</title>
+    <!-- Opcional: CSS si lo necesitas -->
+    <link rel="stylesheet" href="https://legomycode.pages.dev/assets/main.[HASH].css">
 </head>
 <body>
-  
+    <h1>Bloques Remotos</h1>
+    
+    <!-- Usa tus componentes -->
+    <lmc-app-shell></lmc-app-shell>
+    <lmc-button label="Click aquí"></lmc-button>
 
-  <h1>Testing LegoMyCode Blocks</h1>
+    <!-- 1. Importa el JS desde Cloudflare (ES MÓDULO) -->
+    <script type="module" src="https://legomycode.pages.dev/assets/main.CQ9NvG4s.js"></script>
 
-  <lmc-button label="Click me"></lmc-button>
+    <!-- 2. Alternativa para navegadores antiguos (si es necesario) -->
+    <script nomodule src="https://legomycode.pages.dev/assets/legacy.[HASH].js"></script>
 </body>
 </html>
-
-    

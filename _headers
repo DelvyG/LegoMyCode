@@ -2,3 +2,6 @@
   Content-Type: text/javascript
 /*.ts
   Content-Type: application/javascript
+  /*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET
