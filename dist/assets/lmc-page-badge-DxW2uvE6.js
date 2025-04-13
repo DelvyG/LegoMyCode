@@ -1,4 +1,4 @@
-import{a as g,n as i,i as b,x as m,t as p}from"./main-TYaH_DXW.js";var u=Object.defineProperty,v=Object.getOwnPropertyDescriptor,n=(c,a,d,r)=>{for(var e=r>1?void 0:r?v(a,d):a,o=c.length-1,l;o>=0;o--)(l=c[o])&&(e=(r?l(a,d,e):l(e))||e);return r&&e&&u(a,d,e),e};let s=class extends b{constructor(){super(...arguments),this.value=0,this.type="secondary"}render(){return m`${this.value}`}};s.styles=g`
+import{a as g,n as i,i as b,x as m,t as p}from"./index-DD_4F0BZ.js";var u=Object.defineProperty,v=Object.getOwnPropertyDescriptor,n=(c,a,d,r)=>{for(var e=r>1?void 0:r?v(a,d):a,o=c.length-1,l;o>=0;o--)(l=c[o])&&(e=(r?l(a,d,e):l(e))||e);return r&&e&&u(a,d,e),e};let s=class extends b{constructor(){super(...arguments),this.value=0,this.type="secondary"}render(){return m`${this.value}`}};s.styles=g`
     :host {
       display: inline-block;
       font-size: var(--lmc-badge-font-size, 0.75rem);

@@ -1,4 +1,4 @@
-import{i as r,x as d,a as m,r as b,t as p}from"./main-TYaH_DXW.js";var u=Object.defineProperty,g=Object.getOwnPropertyDescriptor,n=(s,a,l,o)=>{for(var e=o>1?void 0:o?g(a,l):a,t=s.length-1,i;t>=0;t--)(i=s[t])&&(e=(o?i(a,l,e):i(e))||e);return o&&e&&u(a,l,e),e};let c=class extends r{constructor(){super(...arguments),this._clickCount=0}_handleDemoClick(){this._clickCount++,console.log("Botón de demostración clickeado!")}render(){return d`
+import{i as r,x as d,a as m,r as b,t as p}from"./index-DD_4F0BZ.js";var u=Object.defineProperty,g=Object.getOwnPropertyDescriptor,n=(s,a,l,o)=>{for(var e=o>1?void 0:o?g(a,l):a,t=s.length-1,i;t>=0;t--)(i=s[t])&&(e=(o?i(a,l,e):i(e))||e);return o&&e&&u(a,l,e),e};let c=class extends r{constructor(){super(...arguments),this._clickCount=0}_handleDemoClick(){this._clickCount++,console.log("Botón de demostración clickeado!")}render(){return d`
       <lmc-container>
         <lmc-text-display level="h1">Botón Básico (lmc-basic-button)</lmc-text-display>
         <lmc-text-display level="p">

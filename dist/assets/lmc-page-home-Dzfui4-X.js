@@ -1,4 +1,4 @@
-import{i as c,x as s,a as m,t as p}from"./main-TYaH_DXW.js";var d=Object.getOwnPropertyDescriptor,g=(o,l,i,r)=>{for(var e=r>1?void 0:r?d(l,i):l,a=o.length-1,t;a>=0;a--)(t=o[a])&&(e=t(e)||e);return e};let n=class extends c{render(){return s`
+import{i as c,x as s,a as m,t as p}from"./index-DD_4F0BZ.js";var d=Object.getOwnPropertyDescriptor,g=(o,l,i,r)=>{for(var e=r>1?void 0:r?d(l,i):l,a=o.length-1,t;a>=0;a--)(t=o[a])&&(e=t(e)||e);return e};let n=class extends c{render(){return s`
       <lmc-container>
         <lmc-text-display level="h1">Bienvenido a LegoMyCode</lmc-text-display>
         <p>
