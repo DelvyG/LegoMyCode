@@ -1,21 +1,23 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import path from 'path';
+export default defineConfig({
+  // Otras configuraciones...
+  build: {
+    assetsDir: 'assets',
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  },
+  // Si estás usando un subpath para tu despliegue:
+  base: '/',
+})
 
-      
-const __filename = fileURLToPath(import.meta.url);
-    const __dirname = dirname(__filename);
-
-    export default defineConfig({
-      build: {
-        outDir: 'dist',
-        rollupOptions: {
-          input: {
-            main: resolve(__dirname, 'index.html'),
-          },
-        },
-      },
-      publicDir: 'public',
-    });
+function defineConfig(arg0: {
+  // Otras configuraciones...
+  build: { assetsDir: string; emptyOutDir: boolean; rollupOptions: { output: { manualChunks: undefined; }; }; };
+  // Si estás usando un subpath para tu despliegue:
+  base: string;
+}) {
+  throw new Error("Function not implemented.");
+}
