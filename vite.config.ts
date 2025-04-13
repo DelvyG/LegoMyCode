@@ -1,16 +1,15 @@
-// vite.config.js
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
+  // Punto de entrada HTML (ubicado en la raíz)
+  root: '.',  
   build: {
+    // Donde se generarán los archivos de build
+    outDir: 'dist',
     rollupOptions: {
-      input: {
-        main: './src/main.js', // Punto de entrada principal
-      },
-      output: {
-        format: 'esm', // Usa ES Modules
-        entryFileNames: 'assets/main.[hash].js',
-      },
+      // Punto de entrada JS (ubicado en src/)
+      input: path.resolve(__dirname, './src/main.js'), 
     },
   },
 });
