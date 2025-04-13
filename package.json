@@ -16,6 +16,7 @@
     "lit-html": "^3.3.0"
   },
   "devDependencies": {
+    "@types/node": "^22.14.1",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   }
