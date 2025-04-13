@@ -3,9 +3,6 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   build: {
     outDir: 'dist',
-    rollupOptions: {
-      input: 'src/lmc-app-shell.ts', // <-- ***IMPORTANTE***
-    },
   },
   publicDir: 'public',
 });

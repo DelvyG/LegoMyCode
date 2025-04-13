@@ -13,36 +13,8 @@
   <div id="app">
     <lmc-app-shell></lmc-app-shell>
   </div>
-
-  <script type="module">
-    // Mover la importación de app shell AQUI
-    import './src/lmc-app-shell.ts';
-
-    // Pegar el código de my-element.ts AQUI
-    // Creamos una instancia de nuestro nuevo componente raíz
-    const appShellInstance = document.createElement('lmc-app-shell');
-
-    // Buscamos el contenedor #app que ya tienes en tu index.html
-    const appContainer = document.getElementById('app');
-    if (appContainer) {
-      appContainer.innerHTML = ''; // Limpia el contenedor
-      appContainer.appendChild(appShellInstance);
-    } else {
-      // Si no hay #app, añadimos directamente al body
-      console.warn('No element with id="app" found. Appending lmc-app-shell directly to body.');
-      // Primero, busca y elimina cualquier instancia de <my-element> que pudiera estar en index.html
-      const oldElement = document.querySelector('my-element');
-      if (oldElement) {
-        oldElement.remove();
-      }
-      document.body.appendChild(appShellInstance);
-    }
-
-    console.log("LegoMyCode App Shell Bootstrapped via index.html");
-  </script>
+  <script type="module" src="/src/lmc-app-shell.ts"></script>
 </body>
 </html>
 
-    
-    
     
