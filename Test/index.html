@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Consumiendo Bloques desde Cloudflare</title>
-    <!-- Opcional: CSS si lo necesitas -->
+    <title>Cualquier Página usando tus Componentes</title>
+    <!-- Opcional: Si tienes CSS global -->
     <link rel="stylesheet" href="https://legomycode.pages.dev/assets/main.[HASH].css">
 </head>
 <body>
-    <h1>Bloques Remotos</h1>
+    <h1>Componentes Remotos</h1>
     
-    <!-- Usa tus componentes -->
+    <!-- 1. Usa tus componentes -->
     <lmc-app-shell></lmc-app-shell>
-    <lmc-button label="Click aquí"></lmc-button>
+    <lmc-button label="Botón Remoto"></lmc-button>
 
-    <script type="module" src="/src/main.js"></script>
+    <!-- 2. Importa el JS desde Cloudflare (¡crítico!) -->
+    <script type="module" src="https://legomycode.pages.dev/assets/main.[HASH].js"></script>
 </body>
 </html>
