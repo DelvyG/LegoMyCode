@@ -1,8 +1,10 @@
 import { LitElement, html, css } from 'lit'; // 'nothing' ELIMINADO
+import { styleMap } from 'lit-html/directives/style-map.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
-import { styleMap } from 'lit/directives/style-map.js'; // Importar styleMap
+
+
 
 /**
  * @element lmc-textarea
@@ -116,4 +118,4 @@ export class LmcTextarea extends LitElement {
     `;
   }
 }
-// Declaración global como antes
+
