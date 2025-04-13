@@ -1,23 +1,24 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export default defineConfig({
-  base: '/',
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      },
-      output: {
-        manualChunks: undefined,
-        entryFileNames: 'assets/[name].[hash].js',
-        chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]'
-      }
-    },
-    outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: false
+ base: '/', // Al no tener subdominio debes agregarlo
+ build: {
+  rollupOptions: {
+   input: {
+    main: resolve(__dirname, 'src/main.ts')
   },
-  publicDir: 'public',
+  
+ },
+ outDir: 'dist',
+ emptyOutDir: true, //Limpiar la carpeta cada vez
+},
+ publicDir: 'public',
 })
