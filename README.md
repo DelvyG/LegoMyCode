@@ -48,7 +48,7 @@ _(Para más detalles, consulta la documentación interna del proyecto)_
     ```bash
     npm run dev
     ```
-    Esto abrirá la aplicación en tu navegador (normalmente en `http://localhost:5173` o similar). ¡Cualquier cambio en el código se reflejará automáticamente!
+    Esto abrirá la aplicación en tu navegador (normalmente en `http://localhost:5173`).
 
 ## Estructura del Proyecto 📁 (Simplificada)
 
